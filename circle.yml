@@ -1,0 +1,19 @@
+machine:
+  timezone:
+    Asia/Tokyo
+
+dependencies:
+    override:
+        - sudo pip install awscli
+    post:
+        - aws configure set region ap-northeast-1
+
+test:
+  override:
+    - echo "Nothing to do here"
+
+deployment:
+  production: # just a label; label names are completely up to you
+    branch: master
+    commands:
+      - aws s3 sync html/ s3://arielscheduleurlgen/ --delete
