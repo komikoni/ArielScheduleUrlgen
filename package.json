@@ -1,0 +1,23 @@
+{
+  "name": "ariel_schedule_urlgen",
+  "version": "1.0.0",
+  "description": "ArielAirOne Enterprise Schedule URL generator",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Keisuke Konishi",
+  "license": "ISC",
+  "browser": {
+    "jquery": "./node_modules/jquery/dist/jquery.js"
+  },
+  "devDependencies": {
+    "browserify": "^14.1.0",
+    "gulp": "^3.9.1",
+    "gulp-uglify": "^2.0.1",
+    "jquery": "^3.1.1",
+    "licensify": "^3.1.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
