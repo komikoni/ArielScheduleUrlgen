@@ -76,7 +76,7 @@ if(gcal_url) {
 			param_map['organizer'] = $('#organizer .selectlistline').attr('resid').split('/')[2];
 			param_map['body_format'] = $(':input[name="body_format_check"]:checked').val();
 			if(param_map['body_format']){
-				param_map['body'] = $('#cke_1_contents :input[name="body"]').val();
+				param_map['body'] = $('body.cke_editable').html();
 			} else {
 				param_map['body'] = $(':input[name="body"]').val();
 			}

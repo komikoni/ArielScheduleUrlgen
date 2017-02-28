@@ -1,6 +1,6 @@
 {
   "name": "ariel_schedule_urlgen",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "ArielAirOne Enterprise Schedule URL generator",
   "main": "main.js",
   "scripts": {
