@@ -70,7 +70,7 @@ if(gcal_url) {
 			$('#facility .selectlistline').each(function(){
 				param_map['facility'].push($(this).attr('resid'));
 			});
-			// 【詳細タブ】
+			// 【詳細タブ】 
 			param_map['organizer'] = $('#organizer .selectlistline').attr('resid').split('/')[2];
 			param_map['body_format'] = $(':input[name="body_format_check"]:checked').val();
 			if(param_map['body_format']){
