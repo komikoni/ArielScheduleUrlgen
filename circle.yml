@@ -16,4 +16,4 @@ deployment:
   production: # just a label; label names are completely up to you
     branch: master
     commands:
-      - aws s3 sync html/ s3://arielscheduleurlgen/ --delete
+      - aws s3 sync / s3://arielscheduleurlgen/ --delete
