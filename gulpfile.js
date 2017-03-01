@@ -20,7 +20,7 @@ gulp.task('build-js', function () {
         entries: './main.js' // どのファイルからビルドするか
     }).plugin('licensify') // licensifyプラグインの有効化
         .bundle() // browserifyの実行
-        .pipe(source('ArielScheduleUrlgen-min.js'))
+        .pipe(source('bundle.js'))
         .pipe(buffer())
         .pipe(uglify({
             preserveComments: 'license' // ライセンスコメントを残しつつminify
