@@ -1,7 +1,8 @@
 var $ = require('jquery');
-var ariel_protocol=$('#ariel_schedule_urlgen').data('protocol');
-var ariel_hostname=$('#ariel_schedule_urlgen').data('hostname');
-var ariel_systemname=$('#ariel_schedule_urlgen').data('systemname');
+var $tool =$('#ariel_schedule_urlgen');
+var ariel_protocol=$tool.data('protocol');
+var ariel_hostname=$tool.data('hostname');
+var ariel_systemname=$tool.data('systemname');
 
 var gcal_url =$('a[href*="//www.google.com/calendar/event?"],'+
 								'a[href*="//www.google.com/calendar/render?"]').prop('href');
@@ -70,7 +71,7 @@ if(gcal_url) {
 			$('#facility .selectlistline').each(function(){
 				param_map['facility'].push($(this).attr('resid'));
 			});
-			// 【詳細タブ】 
+			// 【詳細タブ】
 			param_map['organizer'] = $('#organizer .selectlistline').attr('resid').split('/')[2];
 			param_map['body_format'] = $(':input[name="body_format_check"]:checked').val();
 			if(param_map['body_format']){
