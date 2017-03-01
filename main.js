@@ -1,5 +1,3 @@
-//TODO: 文字修飾時の読み取りは、ID=cke_1_contentsの内容を読み取るべき。bodyは更新前の内容となる為、
-
 var $ = require('jquery');
 var ariel_protocol=$('#ariel_schedule_urlgen').data('protocol');
 var ariel_hostname=$('#ariel_schedule_urlgen').data('hostname');
