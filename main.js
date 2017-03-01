@@ -14,7 +14,7 @@ if(gcal_url) {
 	for(var i=0;pair[i];i++) {
 		var kv = pair[i].split('=');
 		var key = kv[0];
-		var value = decodeURIComponent(kv[1].replace(/[+]/g,'%20'));
+		var value = decodeURIComponent((kv[1]||'').replace(/[+]/g,'%20'));
 		switch (key) {
 			case 'text' :
 			case 'details' :
