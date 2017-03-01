@@ -78,7 +78,7 @@ if(gcal_url) {
 			iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
 			その場合、textareaを読み取る。
 			 */
-			if(param_map['body_format'] && $('#body iframe').size() > 0){
+			if(param_map['body_format'] && $('#body iframe').length > 0){
 				param_map['body'] = $('#body iframe').contents().find('body.cke_editable').html();
 			} else {
 				param_map['body'] = $(':input[name="body"]').val();
