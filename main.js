@@ -74,8 +74,12 @@ if(gcal_url) {
 			// 【詳細タブ】
 			param_map['organizer'] = $('#organizer .selectlistline').attr('resid').split('/')[2];
 			param_map['body_format'] = $(':input[name="body_format_check"]:checked').val();
-			if(param_map['body_format']){
-				param_map['body'] = $('body.cke_editable').html();
+			/* 文字修飾を使用している場合、textarea[name=body]は、初期表示時の内容から更新されない為、
+			iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
+			その場合、textareaを読み取る。
+			 */
+			if(param_map['body_format'] && $('#body iframe').size()){
+				param_map['body'] = $('#body iframe').contents().find('body.cke_editable').html();
 			} else {
 				param_map['body'] = $(':input[name="body"]').val();
 			}
