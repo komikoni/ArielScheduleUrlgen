@@ -215,7 +215,7 @@ $("body").append('<div id="js-INFO" class="fadeInUp"></div><style>#js-INFO {bord
 var $info = $('#js-INFO');
 
 /*メイン処理*/
-$info.append('<h1 style="margin-bottom:30px;font-size:24px">ページタイトル取得</h1><p style="margin-bottom:30px">'+$('h1').text()+'<p>');
+$info.append('<h1 style="margin-bottom:30px;font-size:24px">ページタイトル取得</h1><p style="margin-bottom:30px">'+ariel_url+'<p>');
 
 /*レイヤー削除*/
 $(document).on('click',$layer,function(){
