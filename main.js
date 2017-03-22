@@ -206,9 +206,23 @@ if(gcal_url) {
 	}
 }
 var ariel_url = ariel_protocol+ "://"+ariel_hostname+"/aqua/0/schedule/create?"+ariel_param;
-if(window.prompt(ariel_systemname +"予定登録用URLです。コピーして使ってください。\n「OK」で生成したURLを別ウィンドウで開きます。",ariel_url)){
-	window.open(ariel_url);
-}
+//if(window.prompt(ariel_systemname +"予定登録用URLです。コピーして使ってください。\n「OK」で生成したURLを別ウィンドウで開きます。",ariel_url)){
+//	window.open(ariel_url);
+//}
+$("body").append('<div id="js-GlayLayer"></div><style>#js-GlayLayer{background: #000 none repeat scroll 0 0;height: 100%;left: 0;opacity: 0.6;position: fixed;top: 0;width: 100%;z-index: 9999;}</style>');
+var $layer = $('#js-GlayLayer');
+$("body").append('<div id="js-INFO" class="fadeInUp"></div><style>#js-INFO {border-radius:8px;border:2px solid #333;position:absolute;left:50%;margin-left: -480px;top:50px;padding: 20px;width:920px;background: #fff;z-index:9999;}.titlestyle03{padding:0 15px 10px 0;}@-webkit-keyframes fadeInUp {0% {opacity: 0;transform: translate3d(0, 100%, 0);}100% {opacity: 1;transform: none;}}@keyframes fadeInUp {0% {opacity: 0;transform: translate3d(0, 100%, 0);}100% {opacity: 1;transform: none;}}.fadeInUp {animation-name: fadeInUp;animation-duration: 0.3s;animation-fill-mode: both;}</style>');
+var $info = $('#js-INFO');
+
+/*ここから記述*/
+$info.append('<h1 style="margin-bottom:30px;font-size:24px">ページタイトル取得</h1><p style="margin-bottom:30px">'+$('h1').text()+'<p>');
+
+/*レイヤー削除*/
+$(document).on('click',$layer,function(){
+  $info.remove();
+  $layer.remove();
+});
+
 function formatToArielDate(iso8601DateTime) {
 	/* 20170225T010101Z (UTC) => 2017-02-25 10:01:01 */
 	/* 20170225T010101 (local)=> 2017-02-25 01:01:01 */
