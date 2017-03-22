@@ -226,6 +226,7 @@ $info.append(
 $(document).on('click',$layer,function(){
   $info.remove();
   $layer.remove();
+  $tool.remove();  
 });
 
 function formatToArielDate(iso8601DateTime) {
