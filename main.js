@@ -214,7 +214,7 @@ var $layer = $('#js-GlayLayer');
 $("body").append('<div id="js-INFO" class="fadeInUp"></div><style>#js-INFO {border-radius:8px;border:2px solid #333;position:absolute;left:50%;margin-left: -480px;top:50px;padding: 20px;width:920px;background: #fff;z-index:9999;}.titlestyle03{padding:0 15px 10px 0;}@-webkit-keyframes fadeInUp {0% {opacity: 0;transform: translate3d(0, 100%, 0);}100% {opacity: 1;transform: none;}}@keyframes fadeInUp {0% {opacity: 0;transform: translate3d(0, 100%, 0);}100% {opacity: 1;transform: none;}}.fadeInUp {animation-name: fadeInUp;animation-duration: 0.3s;animation-fill-mode: both;}</style>');
 var $info = $('#js-INFO');
 
-/*ここから記述*/
+/*メイン処理*/
 $info.append('<h1 style="margin-bottom:30px;font-size:24px">ページタイトル取得</h1><p style="margin-bottom:30px">'+$('h1').text()+'<p>');
 
 /*レイヤー削除*/
