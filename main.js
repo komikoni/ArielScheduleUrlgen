@@ -9,7 +9,6 @@ var gcal_url =$('a[href*="//www.google.com/calendar/event?"],'+
 var ariel_param="";
 if(gcal_url) {
 	var gcal_param = gcal_url.match(/[?].+/)[0].substr(1);
-	var arg = new Object;
 	var pair=gcal_param.split('&');
 	for(var i=0;pair[i];i++) {
 		var kv = pair[i].split('=');
