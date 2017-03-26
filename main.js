@@ -302,7 +302,7 @@ $('#generate_short_url').on('click', function() {
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify({
-            "longUrl": $('#longUrl').val()
+            "longUrl": $('#longUrl').text()
         }),
         success: function(j_data) {
             $('#shortUrl').text(j_data.id);
