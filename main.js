@@ -285,13 +285,13 @@ info_html += '<p style="margin-bottom:30px">使い方はとっても簡単です
 // non encoding param list
 // param select
 info_html += '<div><input type="checkbox" name="xxx"/><input type="checkbox" name="yyy"/></div>';
-info_html += '<textarea id="decodeUrl" rows="6" cols="100">' + decodeURIComponent(ariel_url) + '</textarea><br />';
+info_html += '<textarea id="decodeUrl" rows="6" cols="100" readonly>' + decodeURIComponent(ariel_url) + '</textarea><br />';
 // long url
 info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><br />';
 // shorter url control
 info_html += '<button id="generate_short_url" >短縮URL生成</button><br />';
 // short url
-info_html += '<input type="text" id="shortUrl" /><br />';
+info_html += '<input type="text" id="shortUrl" readonly /><br />';
 
 $info.append(info_html);
 
