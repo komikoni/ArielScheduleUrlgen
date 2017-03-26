@@ -220,7 +220,7 @@ $info.append(info_html);
 
 /*レイヤー削除*/
 // TODO: ESCキーが押されたらを追加
-$(document).on('click', $layer, function(etv) {
+$(document).on('click', $layer, function(evt) {
     if (!$(evt.target).closest('#js-Info').length) {
         $info.remove();
         $layer.remove();
