@@ -305,7 +305,7 @@ $('#generate_short_url').on('click', function() {
             "longUrl": $('#longUrl').text()
         }),
         success: function(j_data) {
-            $('#shortUrl').text(j_data.id);
+            $('#shortUrl').val(j_data.id);
         }
     });
 });
