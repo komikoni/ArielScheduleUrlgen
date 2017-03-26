@@ -289,7 +289,7 @@ info_html += '<textarea　id="decodeUrl" rows="4" cols="40">' + decodeURICompone
 // long url
 info_html += '<textarea id="longUrl" rows="4" cols="40">' + ariel_url + '</textarea><br />';
 // shorter url control
-info_html += '<button id="generate_short_url" >短縮URL生成<button><br />';
+info_html += '<button id="generate_short_url" >短縮URL生成</button><br />';
 // short url
 info_html += '<textarea id="shortUrl"></textarea><br />';
 
@@ -300,9 +300,10 @@ $('#generate_short_url').on('click', function() {
         type: "POST",
         url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
         contentType: 'application/json',
-        data: {
+        dataType: 'json',
+        data: JSON.stringify({
             "longUrl": "http://www.google.com/"
-        },
+        }),
         success: function(j_data) {
             $('#shortUrl').text(j_data.id);
         }
