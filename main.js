@@ -208,8 +208,9 @@ var $info = $('#js-Info');
 var info_html = '';
 // header
 info_html += '<h1 style="margin-bottom:30px;font-size:24px">' + ariel_systemname + '予定登録用URL生成' + '</h1>';
-info_html += '<p style="margin-bottom:30px">使い方は簡単です。</p>';
+info_html += '<p style="margin-bottom:30px">使い方はとっても簡単です。</p>';
 // non encoding param list
+info_html += '<div><input type="checkbox" name="xxx"/><input type="checkbox" name="yyy"/></div>';
 info_html += '<textarea>' + decodeURIComponent(ariel_url) + '</textarea>';
 // param select
 // long url
