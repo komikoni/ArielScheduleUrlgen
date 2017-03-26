@@ -208,7 +208,7 @@ var $info = $('#js-Info');
 var info_html = '';
 // header
 info_html += '<h1 style="margin-bottom:30px;font-size:24px">' + ariel_systemname + '予定登録用URL生成' + '</h1>';
-info_html += '<p style="margin-bottom:30px">使い方は簡単です< /p>';
+info_html += '<p style="margin-bottom:30px">使い方は簡単です。</p>';
 // non encoding param list
 info_html += '<textarea>' + decodeURIComponent(ariel_url) + '</textarea>';
 // param select
@@ -220,10 +220,12 @@ $info.append(info_html);
 
 /*レイヤー削除*/
 // TODO: ESCキーが押されたらを追加
-$(document).on('click', $layer, function() {
-    $info.remove();
-    $layer.remove();
-    $tool.remove();
+$(document).on('click', $layer, function(etv) {
+    if (!$(evt.target).closest('#js-Info').length) {
+        $info.remove();
+        $layer.remove();
+        $tool.remove();
+    }
 });
 
 function formatToArielDate(iso8601DateTime) {
