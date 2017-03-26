@@ -285,7 +285,7 @@ info_html += '<p style="margin-bottom:30px">使い方はとっても簡単です
 // non encoding param list
 // param select
 info_html += '<div><input type="checkbox" name="xxx"/><input type="checkbox" name="yyy"/></div>';
-info_html += '<textarea　id="decodeUrl" rows="4" cols="40">' + decodeURIComponent(ariel_url) + '</textarea><br />';
+info_html += '<textarea id="decodeUrl" rows="4" cols="40">' + decodeURIComponent(ariel_url) + '</textarea><br />';
 // long url
 info_html += '<textarea id="longUrl" rows="4" cols="40">' + ariel_url + '</textarea><br />';
 // shorter url control
@@ -302,7 +302,7 @@ $('#generate_short_url').on('click', function() {
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify({
-            "longUrl": "http://www.google.com/"
+            "longUrl": $('#longUrl').val()
         }),
         success: function(j_data) {
             $('#shortUrl').text(j_data.id);
