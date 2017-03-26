@@ -285,26 +285,26 @@ info_html += '<p style="margin-bottom:30px">使い方はとっても簡単です
 // non encoding param list
 // param select
 info_html += '<div><input type="checkbox" name="xxx"/><input type="checkbox" name="yyy"/></div>';
-info_html += '<textarea>' + decodeURIComponent(ariel_url) + '</textarea><br />';
+info_html += '<textarea　id="decodeUrl" rows="4" cols="40">' + decodeURIComponent(ariel_url) + '</textarea><br />';
 // long url
-info_html += '<textarea>' + ariel_url + '</textarea><br />';
+info_html += '<textarea id="longUrl" rows="4" cols="40">' + ariel_url + '</textarea><br />';
 // shorter url control
-info_html += '<button id="generate_short_url" /><br />';
+info_html += '<button id="generate_short_url" >短縮URL生成<button><br />';
 // short url
-info_html += '<textarea id="short_url">' + ariel_url + '</textarea><br />';
+info_html += '<textarea id="shortUrl"></textarea><br />';
 
 $info.append(info_html);
 
 $('#generate_short_url').on('click', function() {
     $.ajax({
         type: "POST",
-        url: "https://www.googleapis.com/urlshortener/v1/url?" + shortener_api_key,
+        url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
         contentType: 'application/json',
         data: {
             "longUrl": "http://www.google.com/"
         },
         success: function(j_data) {
-            $('#short_url').text(j_data.id);
+            $('#shortUrl').text(j_data.id);
         }
     });
 });
