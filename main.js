@@ -279,23 +279,17 @@ var $info = $('#js-Info');
 
 /*メイン処理*/
 var info_html = '';
-// header
 info_html += '<h1 style="margin-bottom:30px;font-size:24px">' + ariel_systemname + '予定登録用URL生成' + '</h1>';
 info_html += '<p style="margin-bottom:30px">使い方はとっても簡単です。</p>';
-// non encoding param list
-// param select
 info_html += '<div><input type="checkbox" name="xxx"/><input type="checkbox" name="yyy"/></div>';
 info_html += '<textarea id="decodeUrl" rows="6" cols="100" readonly>' + decodeURIComponent(ariel_url) + '</textarea><br />';
-// long url
-info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><br />';
-// shorter url control
-info_html += '<button id="generate_short_url" >短縮URL生成</button><br />';
-// short url
-info_html += '<input type="text" id="shortUrl" readonly /><br />';
+info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl" >コピー</button><button id="openLongUrl" >オープン</button><br />';
+info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
+info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortUrl" >コピー</button><button id="openShortUrl" >オープン</button><br />';
 
 $info.append(info_html);
 
-$('#generate_short_url').on('click', function() {
+$('#generateShortUrl').on('click', function() {
     $.ajax({
         type: "POST",
         url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
