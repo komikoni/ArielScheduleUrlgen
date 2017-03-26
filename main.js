@@ -3,6 +3,80 @@ var $tool = $('#ariel_schedule_urlgen');
 var ariel_protocol = $tool.data('protocol');
 var ariel_hostname = $tool.data('hostname');
 var ariel_systemname = $tool.data('systemname');
+var shortener_api_key = $tool.data('shortener_api_key');
+
+var convert_params = {
+    // 【基本タブ】
+    title: { name: "カラー", type: "default" },
+    label: { name: "カラー", type: "checked", array: true },
+    color: { name: "カラー", type: "default" },
+    is_all_day: { name: "", type: "checked" },
+    dtstart: { name: "", type: "ymdhm" },
+    dtend: { name: "", type: "ymdhm" },
+    attendee: { name: "", type: "resid", array: true },
+    facility: { name: "", type: "resid", array: true },
+    // 【詳細タブ】
+    organizer: { name: "", type: "resid" },
+    body_format: { name: "", type: "?" },
+    body: { name: "", type: "?" },
+    location: { name: "", type: "default" },
+    address: { name: "", type: "default" },
+    // 【システムタブ】
+    banner: { name: "", type: "checked" },
+    scope: { name: "", type: "default" },
+    additional_public: { name: "", type: "resid", array: true },
+    allow_attendee_edit: { name: "", type: "default" },
+    view_presence_on_news: { name: "", type: "default" },
+    delegate_allowed: { name: "", type: "default" },
+    // 【繰り返しタブ】
+    recurrent_type: { name: "", type: "checked" },
+    recurrent_interval: { name: "", type: "default" },
+    days_of_week: { name: "", type: "checked", array: true },
+    day_of_week: { name: "", type: "default" },
+    day_of_month: { name: "", type: "default" },
+    recurrent_subtype: { name: "", type: "checked" },
+    week_of_month: { name: "", type: "default" },
+    month_of_year: { name: "", type: "default" },
+    is_all_day_recurrent: { name: "", type: "checked" },
+    irregular_dates: { name: "", type: "ymd", array: true },
+    dtstart_recurrent: { name: "", type: "hm", out_key: "dtstart" },
+    dtend_recurrent: { name: "", type: "hm", out_key: "dtend" },
+    recurrent_start: { name: "", type: "default" },
+    limit_type: { name: "", type: "checked" },
+    limit_count: { name: "", type: "default" },
+    limit_date: { name: "", type: "ymd" },
+    recurrent_except_rule: { name: "", type: "default" },
+    recurrent_except_target: { name: "", type: "checked", array: true },
+    // 【その他タブ】
+    radio_reflection: { name: "", type: "checked" },
+    visitor_company: { name: "", type: "default" },
+    visitor_post: { name: "", type: "default" },
+    visitor_name: { name: "", type: "default" },
+    visitor_company2: { name: "", type: "default" },
+    visitor_post2: { name: "", type: "default" },
+    visitor_name2: { name: "", type: "default" },
+    visitor_company3: { name: "", type: "default" },
+    visitor_post3: { name: "", type: "default" },
+    visitor_name3: { name: "", type: "default" },
+    visitor_company4: { name: "", type: "default" },
+    visitor_post4: { name: "", type: "default" },
+    visitor_name4: { name: "", type: "default" },
+    numeric_field: { name: "", type: "default" },
+    wireless_select: { name: "", type: "default" },
+    group_field: { name: "", type: "resid" },
+    tel_dept: { name: "", type: "default" },
+    user_visitor: { name: "", type: "resid" },
+    tel_extension: { name: "", type: "default" },
+    group_field_2: { name: "", type: "resid" },
+    tel_dept_2: { name: "", type: "default" },
+    user_visitor_2: { name: "", type: "resid" },
+    tel_extension_2: { name: "", type: "default" },
+    group_field_3: { name: "", type: "resid" },
+    tel_dept_3: { name: "", type: "default" },
+    user_visitor_3: { name: "", type: "resid" },
+    tel_extension_3: { name: "", type: "default" },
+    text_field: { name: "", type: "default" },
+};
 
 var param_map = {};
 
@@ -30,7 +104,6 @@ if (gcal_url) {
                 param_map.dtstart = formatToArielDate(dates[0]);
                 param_map.dtend = formatToArielDate(dates[1]);
                 break;
-            default:
         }
     }
 } else {
@@ -210,14 +283,31 @@ var info_html = '';
 info_html += '<h1 style="margin-bottom:30px;font-size:24px">' + ariel_systemname + '予定登録用URL生成' + '</h1>';
 info_html += '<p style="margin-bottom:30px">使い方はとっても簡単です。</p>';
 // non encoding param list
-info_html += '<div><input type="checkbox" name="xxx"/><input type="checkbox" name="yyy"/></div>';
-info_html += '<textarea>' + decodeURIComponent(ariel_url) + '</textarea>';
 // param select
+info_html += '<div><input type="checkbox" name="xxx"/><input type="checkbox" name="yyy"/></div>';
+info_html += '<textarea>' + decodeURIComponent(ariel_url) + '</textarea><br />';
 // long url
-info_html += '<textarea>' + ariel_url + '</textarea>';
+info_html += '<textarea>' + ariel_url + '</textarea><br />';
 // shorter url control
+info_html += '<button id="generate_short_url" /><br />';
 // short url
+info_html += '<textarea id="short_url">' + ariel_url + '</textarea><br />';
+
 $info.append(info_html);
+
+$('#generate_short_url').on('click', function() {
+    $.ajax({
+        type: "POST",
+        url: "https://www.googleapis.com/urlshortener/v1/url?" + shortener_api_key,
+        contentType: 'application/json',
+        data: {
+            "longUrl": "http://www.google.com/"
+        },
+        success: function(j_data) {
+            $('#short_url').text(j_data.id);
+        }
+    });
+});
 
 /*レイヤー削除*/
 // TODO: ESCキーが押されたらを追加
