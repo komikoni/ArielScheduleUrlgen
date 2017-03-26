@@ -4,9 +4,10 @@ var ariel_protocol = $tool.data('protocol');
 var ariel_hostname = $tool.data('hostname');
 var ariel_systemname = $tool.data('systemname');
 
+var param_map = {};
+
 var gcal_url = $('a[href*="//www.google.com/calendar/event?"],' +
     'a[href*="//www.google.com/calendar/render?"]').prop('href');
-var ariel_param = "";
 if (gcal_url) {
     var gcal_param = gcal_url.match(/[?].+/)[0].substr(1);
     var pair = gcal_param.split('&');
@@ -16,15 +17,18 @@ if (gcal_url) {
         var value = decodeURIComponent((kv[1] || '').replace(/[+]/g, '%20'));
         switch (key) {
             case 'text':
+                param_map.title = value;
+                break;
             case 'details':
+                param_map.body = value;
+                break;
             case 'location':
-                var g2tmap = { 'text': 'title', 'location': 'location', 'details': 'body' };
-                ariel_param += g2tmap[key] + '=' + encodeURIComponent(value) + '&';
+                param_map.location = value;
                 break;
             case 'dates':
                 var dates = value.split('/');
-                ariel_param += 'dtstart=' + encodeURIComponent(formatToArielDate(dates[0])) + '&';
-                ariel_param += 'dtend=' + encodeURIComponent(formatToArielDate(dates[1])) + '&';
+                param_map.dtstart = formatToArielDate(dates[0]);
+                param_map.dtend = formatToArielDate(dates[1]);
                 break;
             default:
         }
@@ -32,7 +36,6 @@ if (gcal_url) {
 } else {
     if (window.location.hostname == ariel_hostname) {
         if ($(':input[name="resourceType"][value="/atypes/ariel/schedule"]')) {
-            var param_map = {};
             // 【基本タブ】
             param_map.title = $(':input[name="title"]').val();
             param_map.label = [];
@@ -188,40 +191,35 @@ if (gcal_url) {
             param_map.user_visitor_3 = ($('#user_visitor_3 .selectlistline').attr('resid') || '').split('/')[2];
             param_map.tel_extension_3 = $(':input[name="tel_extension_3"]').val();
             param_map.text_field = $(':input[name="text_field"]').val();
-
-            Object.keys(param_map).forEach(function(key) {
-                var param = param_map[key];
-                if (param instanceof Array) {
-                    for (i = 0; i < param.length; i++) {
-                        ariel_param += key + '=' + encodeURIComponent(param[i]) + '&';
-                    }
-                } else {
-                    if (param) {
-                        ariel_param += key + '=' + encodeURIComponent(param) + '&';
-                    }
-                }
-            });
         }
     }
 }
-var ariel_url = ariel_protocol + "://" + ariel_hostname + "/aqua/0/schedule/create?" + ariel_param;
+
+var ariel_url = generateArielUrl(param_map);
 //if(window.prompt(ariel_systemname +"予定登録用URLです。コピーして使ってください。\n「OK」で生成したURLを別ウィンドウで開きます。",ariel_url)){
 //	window.open(ariel_url);
 //}
 $("body").append('<div id="js-GlayLayer"></div><style>#js-GlayLayer{background: #000 none repeat scroll 0 0;height: 100%;left: 0;opacity: 0.6;position: fixed;top: 0;width: 100%;z-index: 9999;}</style>');
+$("body").append('<div id="js-Info" class="fadeInUp"></div><style>#js-Info {border-radius:8px;border:2px solid #333;position:absolute;left:50%;margin-left: -480px;top:50px;padding: 20px;width:920px;background: #fff;z-index:9999;}.titlestyle03{padding:0 15px 10px 0;}@-webkit-keyframes fadeInUp {0% {opacity: 0;transform: translate3d(0, 100%, 0);}100% {opacity: 1;transform: none;}}@keyframes fadeInUp {0% {opacity: 0;transform: translate3d(0, 100%, 0);}100% {opacity: 1;transform: none;}}.fadeInUp {animation-name: fadeInUp;animation-duration: 0.3s;animation-fill-mode: both;}</style>');
 var $layer = $('#js-GlayLayer');
-$("body").append('<div id="js-INFO" class="fadeInUp"></div><style>#js-INFO {border-radius:8px;border:2px solid #333;position:absolute;left:50%;margin-left: -480px;top:50px;padding: 20px;width:920px;background: #fff;z-index:9999;}.titlestyle03{padding:0 15px 10px 0;}@-webkit-keyframes fadeInUp {0% {opacity: 0;transform: translate3d(0, 100%, 0);}100% {opacity: 1;transform: none;}}@keyframes fadeInUp {0% {opacity: 0;transform: translate3d(0, 100%, 0);}100% {opacity: 1;transform: none;}}.fadeInUp {animation-name: fadeInUp;animation-duration: 0.3s;animation-fill-mode: both;}</style>');
-var $info = $('#js-INFO');
+var $info = $('#js-Info');
 
 /*メイン処理*/
-$info.append(
-    '<h1 style="margin-bottom:30px;font-size:24px">' +
-    ariel_systemname + '予定登録用URL生成' +
-    '</h1>' +
-    '<p style="margin-bottom:30px">' + ariel_url + '<p>'
-);
+var info_html = '';
+// header
+info_html += '<h1 style="margin-bottom:30px;font-size:24px">' + ariel_systemname + '予定登録用URL生成' + '</h1>';
+info_html += '<p style="margin-bottom:30px">使い方は簡単です< /p>';
+// non encoding param list
+info_html += '<textarea>' + decodeURIComponent(ariel_url) + '</textarea>';
+// param select
+// long url
+info_html += '<textarea>' + ariel_url + '</textarea>';
+// shorter url control
+// short url
+$info.append(info_html);
 
 /*レイヤー削除*/
+// TODO: ESCキーが押されたらを追加
 $(document).on('click', $layer, function() {
     $info.remove();
     $layer.remove();
@@ -244,4 +242,21 @@ function formatToArielDate(iso8601DateTime) {
     }
     var jstDateTime = String(date) + ('000000' + String(time)).slice(-6);
     return jstDateTime.replace(/(....)(..)(..)(..)(..)(..)/, "$1-$2-$3 $4:$5:$6");
+}
+
+function generateArielUrl(param_map) {
+    var ariel_param = "";
+    Object.keys(param_map).forEach(function(key) {
+        var param = param_map[key];
+        if (param instanceof Array) {
+            for (i = 0; i < param.length; i++) {
+                ariel_param += key + '=' + encodeURIComponent(param[i]) + '&';
+            }
+        } else {
+            if (param) {
+                ariel_param += key + '=' + encodeURIComponent(param) + '&';
+            }
+        }
+    });
+    return ariel_protocol + "://" + ariel_hostname + "/aqua/0/schedule/create?" + ariel_param;
 }
