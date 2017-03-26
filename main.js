@@ -120,7 +120,7 @@ if (gcal_url) {
                             ('00' + month_irregular).slice(-2) + '-' +
                             ('00' + day_irregular).slice(-2));
                     }
-                })
+                });
                 var hour_dtstart_recurrent = $(':input[name^="hour_dtstart_recurrent"]').val();
                 var minute_dtstart_recurrent = $(':input[name^="minute_dtstart_recurrent"]').val();
                 if (hour_dtstart_recurrent && minute_dtstart_recurrent) {
@@ -200,7 +200,7 @@ if (gcal_url) {
                         ariel_param += key + '=' + encodeURIComponent(param) + '&';
                     }
                 }
-            })
+            });
         }
     }
 }
@@ -231,7 +231,7 @@ $(document).on('click', $layer, function() {
 function formatToArielDate(iso8601DateTime) {
     /* 20170225T010101Z (UTC) => 2017-02-25 10:01:01 */
     /* 20170225T010101 (local)=> 2017-02-25 01:01:01 */
-    if (iso8601DateTime == null) { return null; }
+    if (iso8601DateTime === null) { return null; }
     var date = Number(iso8601DateTime.slice(0, 8));
     var time = Number(iso8601DateTime.slice(9, 15));
     var UTCflag = iso8601DateTime.slice(15, 16);
