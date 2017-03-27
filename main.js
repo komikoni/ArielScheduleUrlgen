@@ -184,6 +184,9 @@ if (gcal_url) {
                         break;
                     case 'resid':
                         $('#' + key + ' .selectlistline').each(function() {
+                            if (param_map[output_key] === undefined) {
+                                param_map[output_key] = [];
+                            }
                             param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
                         });
                         break;
