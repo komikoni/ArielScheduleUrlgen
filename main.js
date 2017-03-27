@@ -23,8 +23,8 @@ var convert_params = {
     facility: { name: "施設", type: "resid", array: true, output: false },
     // 【詳細タブ】
     organizer: { name: "開催者", type: "resid", output: false },
-    body_format: { name: "本文・文字修飾", type: "?" },
-    body: { name: "本文", type: "?" },
+    body_format_check: { name: "本文・文字修飾", type: "checked", output_key: "body_format" },
+    body: { name: "本文", type: "body" },
     location: { name: "場所", type: "normal" },
     address: { name: "住所", type: "normal" },
     // 【システムタブ】
@@ -115,161 +115,249 @@ if (gcal_url) {
 } else {
     if (window.location.hostname == ariel_hostname) {
         if ($(':input[name="resourceType"][value="/atypes/ariel/schedule"]')) {
-            // 【基本タブ】
-            param_map.title = $(':input[name="title"]').val();
-            param_map.label = [];
-            $(':input[name="label"]:checked').each(function() {
-                param_map.label.push($(this).val());
-            });
-            param_map.color = $(':input[name="color"]').val();
-            param_map.is_all_day = $(':input[name="is_all_day"]:checked').val();
-            var year_dtstart = $(':input[name^="year_dtstart"]').val();
-            var month_dtstart = $(':input[name^="month_dtstart"]').val();
-            var day_dtstart = $(':input[name^="day_dtstart"]').val();
-            var hour_dtstart = $(':input[name^="hour_dtstart"]').val();
-            var minute_dtstart = $(':input[name^="minute_dtstart"]').val();
-            param_map.dtstart = year_dtstart + '-' +
-                ('00' + month_dtstart).slice(-2) + '-' +
-                ('00' + day_dtstart).slice(-2) + ' ' +
-                ('00' + hour_dtstart).slice(-2) + ':' +
-                ('00' + minute_dtstart).slice(-2) + ':00';
 
-            var year_dtend = $(':input[name^="year_dtend"]').val();
-            var month_dtend = $(':input[name^="month_dtend"]').val();
-            var day_dtend = $(':input[name^="day_dtend"]').val();
-            var hour_dtend = $(':input[name^="hour_dtend"]').val();
-            var minute_dtend = $(':input[name^="minute_dtend"]').val();
-            param_map.dtend = year_dtend + '-' +
-                ('00' + month_dtend).slice(-2) + '-' +
-                ('00' + day_dtend).slice(-2) + ' ' +
-                ('00' + hour_dtend).slice(-2) + ':' +
-                ('00' + minute_dtend).slice(-2) + ':00';
-            param_map.attendee = [];
-            $('#attendee .selectlistline').each(function() {
-                param_map.attendee.push($(this).attr('resid').split('/')[2]);
+            Object.keys(convert_params).forEach(function(key) {
+                var param = param_map[key];
+                var output_key = param.output_key || key;
+                var selector, val, year, month, day, hour, minute;
+                switch (param.type) {
+                    case 'normal':
+                    case 'checked':
+                        selector = ':input[name="' + key + '"]';
+                        if (param.type == 'checked') {
+                            selector += ':checked';
+                        }
+                        $(selector).each(function() {
+                            val = $(this).val();
+                            if (val != param.default) {
+                                if (param_map[output_key] === undefined) {
+                                    param_map[output_key] = [];
+                                }
+                                param_map[output_key].push();
+                            }
+                        });
+                        break;
+                    case 'ymdhm':
+                    case 'ymd':
+                    case 'hm':
+                        $('#' + key + ' .inputdate').each(function() {
+                            year = $(this).find(':input[name^="year_' + key + '"]').val();
+                            month = $(this).find(':input[name^="month_' + key + '"]').val();
+                            day = $(this).find(':input[name^="day_' + key + '"]').val();
+                            hour = $(this).find(':input[name^="hour_' + key + '"]').val();
+                            minute = $(this).find(':input[name^="minute_' + key + '"]').val();
+                            switch (param.type) {
+                                case 'ymdhm':
+                                    if (year && month && day && hour && minute) {
+                                        if (param_map[output_key] === undefined) {
+                                            param_map[output_key] = [];
+                                        }
+                                        param_map[output_key].push(year + '-' +
+                                            ('00' + month).slice(-2) + '-' +
+                                            ('00' + day).slice(-2) + ' ' +
+                                            ('00' + hour).slice(-2) + ':' +
+                                            ('00' + minute).slice(-2) + ':00');
+                                    }
+                                    break;
+                                case 'ymd':
+                                    if (year && month && day) {
+                                        if (param_map[output_key] === undefined) {
+                                            param_map[output_key] = [];
+                                        }
+                                        param_map[output_key] = year + '-' +
+                                            ('00' + month).slice(-2) + '-' +
+                                            ('00' + day).slice(-2) + ' ';
+                                    }
+                                    break;
+                                case 'hm':
+                                    if (hour && minute) {
+                                        if (param_map[output_key] === undefined) {
+                                            param_map[output_key] = [];
+                                        }
+                                        param_map[output_key] = '2017-01-01 ' +
+                                            ('00' + hour).slice(-2) + ':' +
+                                            ('00' + minute).slice(-2) + ':00';
+                                    }
+                                    break;
+                            }
+                        });
+                        break;
+                    case 'resid':
+                        $('#' + key + ' .selectlistline').each(function() {
+                            param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
+                        });
+                        break;
+                    case 'body':
+                        /* 文字修飾を使用している場合、textarea[name=body]は、初期表示時の内容から更新されない為、
+                        iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
+                        その場合、textareaを読み取る。
+                         */
+                        if (param_map.body_format && $('#body iframe').length > 0) {
+                            param_map.body = $('#body iframe').contents().find('body.cke_editable').html();
+                        } else {
+                            param_map.body = $(':input[name="body"]').val();
+                        }
+                        break;
+                }
             });
-            param_map.facility = [];
-            $('#facility .selectlistline').each(function() {
-                param_map.facility.push($(this).attr('resid'));
-            });
-            // 【詳細タブ】
-            param_map.organizer = $('#organizer .selectlistline').attr('resid').split('/')[2];
-            param_map.body_format = $(':input[name="body_format_check"]:checked').val();
-            /* 文字修飾を使用している場合、textarea[name=body]は、初期表示時の内容から更新されない為、
-            iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
-            その場合、textareaを読み取る。
-             */
-            if (param_map.body_format && $('#body iframe').length > 0) {
-                param_map.body = $('#body iframe').contents().find('body.cke_editable').html();
-            } else {
-                param_map.body = $(':input[name="body"]').val();
-            }
-            param_map.location = $(':input[name="location"]').val();
-            param_map.address = $(':input[name="address"]').val();
-            // 【システムタブ】
-            param_map.banner = $(':input[name="banner"]:checked').val();
-            param_map.scope = $(':input[name="scope"]').val();
-            param_map.additional_public = [];
-            $('#additional_public .selectlistline').each(function() {
-                param_map.additional_public.push($(this).attr('resid').split('/')[2]);
-            });
-            param_map.allow_attendee_edit = $(':input[name="allow_attendee_edit"]').val();
-            param_map.view_presence_on_news = $(':input[name="view_presence_on_news"]').val();
-            param_map.delegate_allowed = $(':input[name="delegate_allowed"]').val();
-            // 【繰り返しタブ】
-            param_map.recurrent_type = $(':input[name="recurrent_type"]:checked').val();
 
-            if (param_map.recurrent_type != 'none') {
-                param_map.recurrent_interval = $(':input[name="recurrent_interval"]').val();
-                param_map.days_of_week = [];
-                $(':input[name="days_of_week"]:checked').each(function() {
-                    param_map.days_of_week.push($(this).val());
-                });
-                param_map.day_of_week = $(':input[name="day_of_week"]').val();
-                param_map.day_of_month = $(':input[name="day_of_month"]').val();
-                param_map.recurrent_subtype = $(':input[name="recurrent_subtype"]:checked').val();
-                param_map.week_of_month = $(':input[name="week_of_month"]').val();
-                param_map.month_of_year = $(':input[name="month_of_year"]').val();
-                param_map.is_all_day_recurrent = $(':input[name="is_all_day_recurrent"]:checked').val();
 
-                param_map.irregular_dates = [];
-                $('#irregular_dates .inputdate').each(function() {
-                    var year_irregular = $(this).find(':input[name^="year_irregular_dates"]').val();
-                    var month_irregular = $(this).find(':input[name^="month_irregular_dates"]').val();
-                    var day_irregular = $(this).find(':input[name^="day_irregular_dates"]').val();
-                    if (year_irregular && month_irregular && day_irregular) {
-                        param_map.irregular_dates.push(year_irregular + '-' +
-                            ('00' + month_irregular).slice(-2) + '-' +
-                            ('00' + day_irregular).slice(-2));
-                    }
-                });
-                var hour_dtstart_recurrent = $(':input[name^="hour_dtstart_recurrent"]').val();
-                var minute_dtstart_recurrent = $(':input[name^="minute_dtstart_recurrent"]').val();
-                if (hour_dtstart_recurrent && minute_dtstart_recurrent) {
-                    param_map.dtstart = '2017-01-01 ' +
-                        ('00' + hour_dtstart_recurrent).slice(-2) + ':' +
-                        ('00' + minute_dtstart_recurrent).slice(-2) + ':00';
-                }
-                var hour_dtend_recurrent = $(':input[name^="hour_dtend_recurrent"]').val();
-                var minute_dtend_recurrent = $(':input[name^="minute_dtend_recurrent"]').val();
-                if (hour_dtend_recurrent && minute_dtend_recurrent) {
-                    param_map.dtend = '2017-01-01 ' +
-                        ('00' + hour_dtend_recurrent).slice(-2) + ':' +
-                        ('00' + minute_dtend_recurrent).slice(-2) + ':00';
-                }
-                var year_recurrent_start = $(':input[name^="year_recurrent_start"]').val();
-                var month_recurrent_start = $(':input[name^="month_recurrent_start"]').val();
-                var day_recurrent_start = $(':input[name^="day_recurrent_start"]').val();
-                if (year_recurrent_start && month_recurrent_start && day_recurrent_start) {
-                    param_map.recurrent_start = year_recurrent_start + '-' +
-                        ('00' + month_recurrent_start).slice(-2) + '-' +
-                        ('00' + day_recurrent_start).slice(-2);
-                }
-                param_map.limit_type = $(':input[name="limit_type"]:checked').val();
-                param_map.limit_count = $(':input[name="limit_count"]').val();
-                var year_limit_date = $(':input[name^="year_limit_date"]').val();
-                var month_limit_date = $(':input[name^="month_limit_date"]').val();
-                var day_limit_date = $(':input[name^="day_limit_date"]').val();
-                if (year_limit_date && month_limit_date && day_limit_date) {
-                    param_map.limit_date = year_limit_date + '-' +
-                        ('00' + month_limit_date).slice(-2) + '-' +
-                        ('00' + day_limit_date).slice(-2);
-                }
-                param_map.recurrent_except_rule = $(':input[name="recurrent_except_rule"]').val();
-                param_map.recurrent_except_target = [];
-                $(':input[name="recurrent_except_target"]:checked').each(function() {
-                    param_map.recurrent_except_target.push($(this).val());
-                });
-            }
-            // 【その他タブ】
-            param_map.radio_reflection = $(':input[name="radio_reflection"]:checked').val();
-            param_map.visitor_company = $(':input[name="visitor_company"]').val();
-            param_map.visitor_post = $(':input[name="visitor_post"]').val();
-            param_map.visitor_name = $(':input[name="visitor_name"]').val();
-            param_map.visitor_company2 = $(':input[name="visitor_company2"]').val();
-            param_map.visitor_post2 = $(':input[name="visitor_post2"]').val();
-            param_map.visitor_name2 = $(':input[name="visitor_name2"]').val();
-            param_map.visitor_company3 = $(':input[name="visitor_company3"]').val();
-            param_map.visitor_post3 = $(':input[name="visitor_post3"]').val();
-            param_map.visitor_name3 = $(':input[name="visitor_name3"]').val();
-            param_map.visitor_company4 = $(':input[name="visitor_company4"]').val();
-            param_map.visitor_post4 = $(':input[name="visitor_post4"]').val();
-            param_map.visitor_name4 = $(':input[name="visitor_name4"]').val();
-            param_map.numeric_field = $(':input[name="numeric_field"]').val();
-            param_map.wireless_select = $(':input[name="wireless_select"]').val();
-            param_map.group_field = ($('#group_field .selectlistline').attr('resid') || '').split('/')[2];
-            param_map.tel_dept = $(':input[name="tel_dept"]').val();
-            param_map.user_visitor = ($('#user_visitor .selectlistline').attr('resid') || '').split('/')[2];
-            param_map.tel_extension = $(':input[name="tel_extension"]').val();
-            param_map.group_field_2 = ($('#group_field_2 .selectlistline').attr('resid') || '').split('/')[2];
-            param_map.tel_dept_2 = $(':input[name="tel_dept_2"]').val();
-            param_map.user_visitor_2 = ($('#user_visitor_2 .selectlistline').attr('resid') || '').split('/')[2];
-            param_map.tel_extension_2 = $(':input[name="tel_extension_2"]').val();
-            param_map.group_field_3 = ($('#group_field_3 .selectlistline').attr('resid') || '').split('/')[2];
-            param_map.tel_dept_3 = $(':input[name="tel_dept_3"]').val();
-            param_map.user_visitor_3 = ($('#user_visitor_3 .selectlistline').attr('resid') || '').split('/')[2];
-            param_map.tel_extension_3 = $(':input[name="tel_extension_3"]').val();
-            param_map.text_field = $(':input[name="text_field"]').val();
+
+            // // 【基本タブ】
+            // param_map.title = $(':input[name="title"]').val();
+            // param_map.label = [];
+            // $(':input[name="label"]:checked').each(function() {
+            //     param_map.label.push($(this).val());
+            // });
+            // param_map.color = $(':input[name="color"]').val();
+            // param_map.is_all_day = $(':input[name="is_all_day"]:checked').val();
+            // var year_dtstart = $(':input[name^="year_dtstart"]').val();
+            // var month_dtstart = $(':input[name^="month_dtstart"]').val();
+            // var day_dtstart = $(':input[name^="day_dtstart"]').val();
+            // var hour_dtstart = $(':input[name^="hour_dtstart"]').val();
+            // var minute_dtstart = $(':input[name^="minute_dtstart"]').val();
+            // param_map.dtstart = year_dtstart + '-' +
+            //     ('00' + month_dtstart).slice(-2) + '-' +
+            //     ('00' + day_dtstart).slice(-2) + ' ' +
+            //     ('00' + hour_dtstart).slice(-2) + ':' +
+            //     ('00' + minute_dtstart).slice(-2) + ':00';
+
+            // var year_dtend = $(':input[name^="year_dtend"]').val();
+            // var month_dtend = $(':input[name^="month_dtend"]').val();
+            // var day_dtend = $(':input[name^="day_dtend"]').val();
+            // var hour_dtend = $(':input[name^="hour_dtend"]').val();
+            // var minute_dtend = $(':input[name^="minute_dtend"]').val();
+            // param_map.dtend = year_dtend + '-' +
+            //     ('00' + month_dtend).slice(-2) + '-' +
+            //     ('00' + day_dtend).slice(-2) + ' ' +
+            //     ('00' + hour_dtend).slice(-2) + ':' +
+            //     ('00' + minute_dtend).slice(-2) + ':00';
+            // param_map.attendee = [];
+            // $('#attendee .selectlistline').each(function() {
+            //     param_map.attendee.push($(this).attr('resid').split('/')[2]);
+            // });
+            // param_map.facility = [];
+            // $('#facility .selectlistline').each(function() {
+            //     param_map.facility.push($(this).attr('resid'));
+            // });
+            // // 【詳細タブ】
+            // param_map.organizer = $('#organizer .selectlistline').attr('resid').split('/')[2];
+            // param_map.body_format = $(':input[name="body_format_check"]:checked').val();
+            // /* 文字修飾を使用している場合、textarea[name=body]は、初期表示時の内容から更新されない為、
+            // iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
+            // その場合、textareaを読み取る。
+            //  */
+            // if (param_map.body_format && $('#body iframe').length > 0) {
+            //     param_map.body = $('#body iframe').contents().find('body.cke_editable').html();
+            // } else {
+            //     param_map.body = $(':input[name="body"]').val();
+            // }
+            // param_map.location = $(':input[name="location"]').val();
+            // param_map.address = $(':input[name="address"]').val();
+            // // 【システムタブ】
+            // param_map.banner = $(':input[name="banner"]:checked').val();
+            // param_map.scope = $(':input[name="scope"]').val();
+            // param_map.additional_public = [];
+            // $('#additional_public .selectlistline').each(function() {
+            //     param_map.additional_public.push($(this).attr('resid').split('/')[2]);
+            // });
+            // param_map.allow_attendee_edit = $(':input[name="allow_attendee_edit"]').val();
+            // param_map.view_presence_on_news = $(':input[name="view_presence_on_news"]').val();
+            // param_map.delegate_allowed = $(':input[name="delegate_allowed"]').val();
+            // // 【繰り返しタブ】
+            // param_map.recurrent_type = $(':input[name="recurrent_type"]:checked').val();
+
+            // if (param_map.recurrent_type != 'none') {
+            //     param_map.recurrent_interval = $(':input[name="recurrent_interval"]').val();
+            //     param_map.days_of_week = [];
+            //     $(':input[name="days_of_week"]:checked').each(function() {
+            //         param_map.days_of_week.push($(this).val());
+            //     });
+            //     param_map.day_of_week = $(':input[name="day_of_week"]').val();
+            //     param_map.day_of_month = $(':input[name="day_of_month"]').val();
+            //     param_map.recurrent_subtype = $(':input[name="recurrent_subtype"]:checked').val();
+            //     param_map.week_of_month = $(':input[name="week_of_month"]').val();
+            //     param_map.month_of_year = $(':input[name="month_of_year"]').val();
+            //     param_map.is_all_day_recurrent = $(':input[name="is_all_day_recurrent"]:checked').val();
+
+            //     param_map.irregular_dates = [];
+            //     $('#irregular_dates .inputdate').each(function() {
+            //         var year_irregular = $(this).find(':input[name^="year_irregular_dates"]').val();
+            //         var month_irregular = $(this).find(':input[name^="month_irregular_dates"]').val();
+            //         var day_irregular = $(this).find(':input[name^="day_irregular_dates"]').val();
+            //         if (year_irregular && month_irregular && day_irregular) {
+            //             param_map.irregular_dates.push(year_irregular + '-' +
+            //                 ('00' + month_irregular).slice(-2) + '-' +
+            //                 ('00' + day_irregular).slice(-2));
+            //         }
+            //     });
+            //     var hour_dtstart_recurrent = $(':input[name^="hour_dtstart_recurrent"]').val();
+            //     var minute_dtstart_recurrent = $(':input[name^="minute_dtstart_recurrent"]').val();
+            //     if (hour_dtstart_recurrent && minute_dtstart_recurrent) {
+            //         param_map.dtstart = '2017-01-01 ' +
+            //             ('00' + hour_dtstart_recurrent).slice(-2) + ':' +
+            //             ('00' + minute_dtstart_recurrent).slice(-2) + ':00';
+            //     }
+            //     var hour_dtend_recurrent = $(':input[name^="hour_dtend_recurrent"]').val();
+            //     var minute_dtend_recurrent = $(':input[name^="minute_dtend_recurrent"]').val();
+            //     if (hour_dtend_recurrent && minute_dtend_recurrent) {
+            //         param_map.dtend = '2017-01-01 ' +
+            //             ('00' + hour_dtend_recurrent).slice(-2) + ':' +
+            //             ('00' + minute_dtend_recurrent).slice(-2) + ':00';
+            //     }
+            //     var year_recurrent_start = $(':input[name^="year_recurrent_start"]').val();
+            //     var month_recurrent_start = $(':input[name^="month_recurrent_start"]').val();
+            //     var day_recurrent_start = $(':input[name^="day_recurrent_start"]').val();
+            //     if (year_recurrent_start && month_recurrent_start && day_recurrent_start) {
+            //         param_map.recurrent_start = year_recurrent_start + '-' +
+            //             ('00' + month_recurrent_start).slice(-2) + '-' +
+            //             ('00' + day_recurrent_start).slice(-2);
+            //     }
+            //     param_map.limit_type = $(':input[name="limit_type"]:checked').val();
+            //     param_map.limit_count = $(':input[name="limit_count"]').val();
+            //     var year_limit_date = $(':input[name^="year_limit_date"]').val();
+            //     var month_limit_date = $(':input[name^="month_limit_date"]').val();
+            //     var day_limit_date = $(':input[name^="day_limit_date"]').val();
+            //     if (year_limit_date && month_limit_date && day_limit_date) {
+            //         param_map.limit_date = year_limit_date + '-' +
+            //             ('00' + month_limit_date).slice(-2) + '-' +
+            //             ('00' + day_limit_date).slice(-2);
+            //     }
+            //     param_map.recurrent_except_rule = $(':input[name="recurrent_except_rule"]').val();
+            //     param_map.recurrent_except_target = [];
+            //     $(':input[name="recurrent_except_target"]:checked').each(function() {
+            //         param_map.recurrent_except_target.push($(this).val());
+            //     });
+            // }
+            // // 【その他タブ】
+            // param_map.radio_reflection = $(':input[name="radio_reflection"]:checked').val();
+            // param_map.visitor_company = $(':input[name="visitor_company"]').val();
+            // param_map.visitor_post = $(':input[name="visitor_post"]').val();
+            // param_map.visitor_name = $(':input[name="visitor_name"]').val();
+            // param_map.visitor_company2 = $(':input[name="visitor_company2"]').val();
+            // param_map.visitor_post2 = $(':input[name="visitor_post2"]').val();
+            // param_map.visitor_name2 = $(':input[name="visitor_name2"]').val();
+            // param_map.visitor_company3 = $(':input[name="visitor_company3"]').val();
+            // param_map.visitor_post3 = $(':input[name="visitor_post3"]').val();
+            // param_map.visitor_name3 = $(':input[name="visitor_name3"]').val();
+            // param_map.visitor_company4 = $(':input[name="visitor_company4"]').val();
+            // param_map.visitor_post4 = $(':input[name="visitor_post4"]').val();
+            // param_map.visitor_name4 = $(':input[name="visitor_name4"]').val();
+            // param_map.numeric_field = $(':input[name="numeric_field"]').val();
+            // param_map.wireless_select = $(':input[name="wireless_select"]').val();
+            // param_map.group_field = ($('#group_field .selectlistline').attr('resid') || '').split('/')[2];
+            // param_map.tel_dept = $(':input[name="tel_dept"]').val();
+            // param_map.user_visitor = ($('#user_visitor .selectlistline').attr('resid') || '').split('/')[2];
+            // param_map.tel_extension = $(':input[name="tel_extension"]').val();
+            // param_map.group_field_2 = ($('#group_field_2 .selectlistline').attr('resid') || '').split('/')[2];
+            // param_map.tel_dept_2 = $(':input[name="tel_dept_2"]').val();
+            // param_map.user_visitor_2 = ($('#user_visitor_2 .selectlistline').attr('resid') || '').split('/')[2];
+            // param_map.tel_extension_2 = $(':input[name="tel_extension_2"]').val();
+            // param_map.group_field_3 = ($('#group_field_3 .selectlistline').attr('resid') || '').split('/')[2];
+            // param_map.tel_dept_3 = $(':input[name="tel_dept_3"]').val();
+            // param_map.user_visitor_3 = ($('#user_visitor_3 .selectlistline').attr('resid') || '').split('/')[2];
+            // param_map.tel_extension_3 = $(':input[name="tel_extension_3"]').val();
+            // param_map.text_field = $(':input[name="text_field"]').val();
         }
     }
 }
