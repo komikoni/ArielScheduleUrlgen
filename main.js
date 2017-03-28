@@ -189,7 +189,7 @@ if (gcal_url) {
                     }
                     if (param_map[output_key].length === 0) {
                         delete param_map[output_key];
-                    } else if (param_map[output_key].length === 1) {
+                    } else if (param.array) {
                         param_map[output_key] = param_map[output_key][0];
                     }
                 }
