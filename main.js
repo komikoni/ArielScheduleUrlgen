@@ -51,7 +51,7 @@ var convert_params = {
     limit_type: { name: "期限", type: "checked", recurrent: true },
     limit_count: { name: "反復回数", type: "normal", recurrent: true },
     limit_date: { name: "終了日", type: "ymd", recurrent: true },
-    recurrent_except_rule: { name: "特例日の扱い", type: "normal", recurrent: true },
+    recurrent_except_rule: { name: "特例日の扱い", type: "normal", default: "0", recurrent: true },
     recurrent_except_target: { name: "特例日", type: "checked", array: true, recurrent: true },
     // 【その他タブ】
     radio_reflection: { name: "来館者の申請", type: "checked", default: "0" },
@@ -81,7 +81,7 @@ var convert_params = {
     tel_dept_3: { name: "代替者２部門内線番号", type: "normal" },
     user_visitor_3: { name: "代替者２氏名", type: "resid" },
     tel_extension_3: { name: "代替者２部門内線番号", type: "normal" },
-    text_field: { name: "受付の伝言", type: "normal" },
+    text_field: { name: "受付への伝言", type: "normal" },
 };
 
 var param_map = {};
