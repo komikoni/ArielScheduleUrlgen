@@ -163,7 +163,7 @@ if (gcal_url) {
                                         break;
                                     case 'hm':
                                         if (hour && minute) {
-                                            param_map[output_key].push('2017-01-01 ' + hm);
+                                            param_map[output_key].push('0000-00-00 ' + hm);
                                         }
                                         break;
                                 }
