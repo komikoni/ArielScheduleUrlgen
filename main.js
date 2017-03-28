@@ -1,7 +1,5 @@
 // TODO : 参加者、主催者、施設のチェックボックスを表示しデフォルトの出力対象から外す
 // TODO : convert_paramsを読み込んで、パラメータの出力有無選択
-// TODO : convert_paramsを読み込んで、パラメータの生成
-// TODO : convert_paramsを読み込んで、デフォルト値と同一の場合、パラメータ出力対象外とする
 // TODO : clipboard.js(npm有) でのクリップボードのコピー
 // TODO : ☓ボタンを追加する、ESCキーで表示解除する
 var $ = require('jquery');
