@@ -68,7 +68,7 @@ var convert_params = {
     visitor_post4: { name: "来館者４役職", type: "normal" },
     visitor_name4: { name: "来館者４氏名", type: "normal" },
     numeric_field: { name: "来館人数", type: "normal", default: "1" },
-    wireless_select: { name: "無線LAN利用", type: "normal", default: "0" },
+    wireless_select: { name: "無線LAN利用", type: "checked", default: "0" },
     group_field: { name: "面会者部門名", type: "resid" },
     tel_dept: { name: "面会者部門内線番号", type: "normal" },
     user_visitor: { name: "面会者氏名", type: "resid" },
