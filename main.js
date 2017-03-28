@@ -118,8 +118,7 @@ if (gcal_url) {
 
             Object.keys(convert_params).forEach(function(key) {
                 var param = convert_params[key];
-                //var output_key = param.output_key === undefined ? param.output_key : key;
-                var output_key = key;
+                var output_key = param.output_key || key;
                 var selector, val, year, month, day, hour, minute;
                 param_map[output_key] = [];
                 switch (param.type) {
@@ -131,7 +130,7 @@ if (gcal_url) {
                         }
                         $(selector).each(function() {
                             val = $(this).val();
-                            if (val != param.default) {
+                            if (val && val != param.default) {
                                 param_map[output_key].push(val);
                             }
                         });
