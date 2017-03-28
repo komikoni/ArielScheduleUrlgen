@@ -11,46 +11,46 @@ var shortener_api_key = $tool.data('shortener_api_key');
 
 var convert_params = {
     // 【基本タブ】
-    title: { name: "タイトル", type: "normal" },
-    label: { name: "ラベル", type: "checked", array: true },
-    color: { name: "背景色", type: "normal" },
-    is_all_day: { name: "終日", type: "checked" },
-    dtstart: { name: "開始日時", type: "ymdhm" },
-    dtend: { name: "終了日時", type: "ymdhm" },
-    attendee: { name: "出席者", type: "resid", array: true, output: false },
-    facility: { name: "施設", type: "resid", array: true, output: false },
+    title: { name: "タイトル", type: "normal", tab: "basic" },
+    label: { name: "ラベル", type: "checked", array: true, tab: "basic" },
+    color: { name: "背景色", type: "normal", tab: "basic" },
+    is_all_day: { name: "終日", type: "checked", tab: "basic" },
+    dtstart: { name: "開始日時", type: "ymdhm", tab: "basic" },
+    dtend: { name: "終了日時", type: "ymdhm", tab: "basic" },
+    attendee: { name: "出席者", type: "resid", array: true, output: false, tab: "basic" },
+    facility: { name: "施設", type: "resid", array: true, output: false, tab: "basic" },
     // 【詳細タブ】
-    organizer: { name: "開催者", type: "resid", output: false },
-    body_format_check: { name: "本文・文字修飾", type: "checked", output_key: "body_format" },
-    body: { name: "本文", type: "body" },
-    location: { name: "場所", type: "normal" },
-    address: { name: "住所", type: "normal" },
+    organizer: { name: "開催者", type: "resid", output: false, tab: "detail" },
+    body_format_check: { name: "本文・文字修飾", type: "checked", output_key: "body_format", tab: "detail" },
+    body: { name: "本文", type: "body", tab: "detail" },
+    location: { name: "場所", type: "normal", tab: "detail" },
+    address: { name: "住所", type: "normal", tab: "detail" },
     // 【システムタブ】
-    banner: { name: "予定の種別", type: "checked", default: "0" },
-    scope: { name: "公開範囲", type: "normal" },
-    additional_public: { name: "その他の公開範囲", type: "resid", array: true },
-    allow_attendee_edit: { name: "編集許可", type: "normal" },
-    view_presence_on_news: { name: "出欠と予約状況", type: "normal" },
-    delegate_allowed: { name: "代理出席", type: "normal" },
+    banner: { name: "予定の種別", type: "checked", default: "0", tab: "sysytem" },
+    scope: { name: "公開範囲", type: "normal", tab: "sysytem" },
+    additional_public: { name: "その他の公開範囲", type: "resid", array: true, tab: "sysytem" },
+    allow_attendee_edit: { name: "編集許可", type: "normal", tab: "sysytem" },
+    view_presence_on_news: { name: "出欠と予約状況", type: "normal", tab: "sysytem" },
+    delegate_allowed: { name: "代理出席", type: "normal", tab: "sysytem" },
     // 【繰り返しタブ】
-    recurrent_type: { name: "パターン", type: "checked", default: "none" },
-    recurrent_interval: { name: "日・週・月・年毎", type: "normal", recurrent: true },
-    days_of_week: { name: "週毎の曜日", type: "checked", array: true, recurrent: true },
-    month_of_year: { name: "年毎の月", type: "normal", recurrent: true },
-    recurrent_subtype: { name: "月・年毎の特定日・週", type: "checked", recurrent: true },
-    day_of_month: { name: "月・年毎の特定日", type: "normal", recurrent: true },
-    week_of_month: { name: "月・年毎の特定週", type: "normal", recurrent: true },
-    day_of_week: { name: "月・年毎の特定週の曜日", type: "normal", recurrent: true },
-    is_all_day_recurrent: { name: "終日", type: "checked", recurrent: true },
-    irregular_dates: { name: "不定期日付", type: "ymd", array: true, recurrent: true },
-    dtstart_recurrent: { name: "開始時刻", type: "hm", output_key: "dtstart", recurrent: true },
-    dtend_recurrent: { name: "終了時刻", type: "hm", output_key: "dtend", recurrent: true },
-    recurrent_start: { name: "開始日", type: "normal", recurrent: true },
-    limit_type: { name: "期限", type: "checked", recurrent: true },
-    limit_count: { name: "反復回数", type: "normal", recurrent: true },
-    limit_date: { name: "終了日", type: "ymd", recurrent: true },
-    recurrent_except_rule: { name: "特例日の扱い", type: "normal", default: "0", recurrent: true },
-    recurrent_except_target: { name: "特例日", type: "checked", array: true, recurrent: true },
+    recurrent_type: { name: "パターン", type: "checked", default: "none", tab: "recurrent" },
+    recurrent_interval: { name: "日・週・月・年毎", type: "normal", tab: "recurrent" },
+    days_of_week: { name: "週毎の曜日", type: "checked", array: true, tab: "recurrent" },
+    month_of_year: { name: "年毎の月", type: "normal", tab: "recurrent" },
+    recurrent_subtype: { name: "月・年毎の特定日・週", type: "checked", tab: "recurrent" },
+    day_of_month: { name: "月・年毎の特定日", type: "normal", tab: "recurrent" },
+    week_of_month: { name: "月・年毎の特定週", type: "normal", tab: "recurrent" },
+    day_of_week: { name: "月・年毎の特定週の曜日", type: "normal", tab: "recurrent" },
+    is_all_day_recurrent: { name: "終日", type: "checked", tab: "recurrent" },
+    irregular_dates: { name: "不定期日付", type: "ymd", array: true, tab: "recurrent" },
+    dtstart_recurrent: { name: "開始時刻", type: "hm", output_key: "dtstart", tab: "recurrent" },
+    dtend_recurrent: { name: "終了時刻", type: "hm", output_key: "dtend", tab: "recurrent" },
+    recurrent_start: { name: "開始日", type: "normal", tab: "recurrent" },
+    limit_type: { name: "期限", type: "checked", tab: "recurrent" },
+    limit_count: { name: "反復回数", type: "normal", tab: "recurrent" },
+    limit_date: { name: "終了日", type: "ymd", tab: "recurrent" },
+    recurrent_except_rule: { name: "特例日の扱い", type: "normal", default: "0", tab: "recurrent" },
+    recurrent_except_target: { name: "特例日", type: "checked", array: true, tab: "recurrent" },
     // 【その他タブ】
     radio_reflection: { name: "来館者の申請", type: "checked", default: "0" },
     visitor_company: { name: "来館者１会社名", type: "normal" },
@@ -119,8 +119,8 @@ if (gcal_url) {
                 var param = convert_params[key];
                 var output_key = param.output_key || key;
                 var selector, val, year, month, day, hour, minute, ymd, hm;
-                // 繰返し項目は、繰り返し指定がないときは出力しない。
-                if (param_map.recurrent_type === undefined && param.recurrent) {
+                // 繰り返し指定がないときは繰返し項目を出力しない。
+                if ($form.find(':input[name="recurrent_type"]').val() === 'none' && param.tab === 'recurrent') {
                     // skip
                 } else {
                     param_map[output_key] = [];
@@ -211,10 +211,10 @@ var $info = $('#js-Info');
 /*メイン処理*/
 var info_html = '';
 info_html += '<h1 style="margin-bottom:30px;font-size:24px">' + ariel_systemname + '予定登録用URL生成' + '</h1>';
-info_html += '<p style="margin-bottom:30px">使い方はとっても簡単です。</p>';
-info_html += '<div><input type="checkbox" name="xxx"/><input type="checkbox" name="yyy"/></div>';
-info_html += '<textarea id="paramJson" rows="6" cols="100" readonly>' + JSON.stringify(param_map, null, "    ") + '</textarea><br />';
-info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl" >コピー</button><button id="openLongUrl" >オープン</button><br />';
+info_html += '<p style="margin-bottom:30px">JSONを見て出力されるURLの内容に問題ないか確認して下さい。 問題ある場合は、JSONを編集し再出力して下さい。 短縮URLを生成する場合は、削除できない為、内容をよくよく確認して下さい。(生成にはapi-keyが必要です)</p>';
+info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" name="facility_flag"/><label for="facility_flag">施設</label></div>';
+info_html += '<textarea id="paramJson" rows="6" cols="100" readonly>' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="copyLongUrl" >URL再生成</button><br />';
+info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
 info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
 info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortUrl" >コピー</button><button id="openShortUrl" >オープン</button><br />';
 
