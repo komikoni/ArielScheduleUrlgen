@@ -119,6 +119,7 @@ if (gcal_url) {
                 var param = convert_params[key];
                 var output_key = param.output_key || key;
                 var selector, val, year, month, day, hour, minute, ymd, hm;
+                // 繰返し項目は、繰り返し指定がないときは出力しない。
                 if (param_map.recurrent_type === undefined && param.recurrent) {
                     // skip
                 } else {
@@ -187,7 +188,7 @@ if (gcal_url) {
                     }
                     if (param_map[output_key].length === 0) {
                         delete param_map[output_key];
-                    } else if (param.array) {
+                    } else if (!param.array) {
                         param_map[output_key] = param_map[output_key][0];
                     }
                 }
