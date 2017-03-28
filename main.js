@@ -189,6 +189,8 @@ if (gcal_url) {
                     }
                     if (param_map[output_key].length === 0) {
                         delete param_map[output_key];
+                    } else if (param_map[output_key].length === 1) {
+                        param_map[output_key] = param_map[output_key][0];
                     }
                 }
             });
@@ -276,5 +278,6 @@ function generateArielUrl(param_map) {
             }
         }
     });
+    ariel_param = ariel_param.substr(0, ariel_param.length - 1);
     return ariel_protocol + "://" + ariel_hostname + "/aqua/0/schedule/create?" + ariel_param;
 }
