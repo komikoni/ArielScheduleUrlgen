@@ -122,6 +122,8 @@ if (gcal_url) {
                 var output_key = param.output_key || key;
                 var selector, val, year, month, day, hour, minute, ymd, hm;
                 if (param_map.recurrent_type && param.recurrent) {
+                    // skip
+                } else {
                     param_map[output_key] = [];
                     switch (param.type) {
                         case 'normal':
