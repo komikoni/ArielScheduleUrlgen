@@ -121,6 +121,7 @@ if (gcal_url) {
                 //var output_key = param.output_key === undefined ? param.output_key : key;
                 var output_key = key;
                 var selector, val, year, month, day, hour, minute;
+                param_map[output_key] = [];
                 switch (param.type) {
                     case 'normal':
                     case 'checked':
@@ -131,10 +132,7 @@ if (gcal_url) {
                         $(selector).each(function() {
                             val = $(this).val();
                             if (val != param.default) {
-                                if (param_map[output_key] === undefined) {
-                                    param_map[output_key] = [];
-                                }
-                                param_map[output_key].push();
+                                param_map[output_key].push(val);
                             }
                         });
                         break;
@@ -150,9 +148,6 @@ if (gcal_url) {
                             switch (param.type) {
                                 case 'ymdhm':
                                     if (year && month && day && hour && minute) {
-                                        if (param_map[output_key] === undefined) {
-                                            param_map[output_key] = [];
-                                        }
                                         param_map[output_key].push(year + '-' +
                                             ('00' + month).slice(-2) + '-' +
                                             ('00' + day).slice(-2) + ' ' +
@@ -162,22 +157,16 @@ if (gcal_url) {
                                     break;
                                 case 'ymd':
                                     if (year && month && day) {
-                                        if (param_map[output_key] === undefined) {
-                                            param_map[output_key] = [];
-                                        }
-                                        param_map[output_key] = year + '-' +
+                                        param_map[output_key].push(year + '-' +
                                             ('00' + month).slice(-2) + '-' +
-                                            ('00' + day).slice(-2) + ' ';
+                                            ('00' + day).slice(-2) + ' ');
                                     }
                                     break;
                                 case 'hm':
                                     if (hour && minute) {
-                                        if (param_map[output_key] === undefined) {
-                                            param_map[output_key] = [];
-                                        }
-                                        param_map[output_key] = '2017-01-01 ' +
+                                        param_map[output_key].push('2017-01-01 ' +
                                             ('00' + hour).slice(-2) + ':' +
-                                            ('00' + minute).slice(-2) + ':00';
+                                            ('00' + minute).slice(-2) + ':00');
                                     }
                                     break;
                             }
@@ -185,9 +174,6 @@ if (gcal_url) {
                         break;
                     case 'resid':
                         $('#' + key + ' .selectlistline').each(function() {
-                            if (param_map[output_key] === undefined) {
-                                param_map[output_key] = [];
-                            }
                             param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
                         });
                         break;
@@ -203,6 +189,10 @@ if (gcal_url) {
                         }
                         break;
                 }
+                if (param_map[output_key].length === 0) {
+                    delete param_map[output_key];
+                }
+
             });
 
 
