@@ -115,6 +115,7 @@ if (gcal_url) {
 } else {
     if (window.location.hostname == ariel_hostname) {
         if ($(':input[name="resourceType"][value="/atypes/ariel/schedule"]')) {
+            $form = $('form[name="edit"]');
 
             Object.keys(convert_params).forEach(function(key) {
                 var param = convert_params[key];
@@ -128,7 +129,7 @@ if (gcal_url) {
                         if (param.type == 'checked') {
                             selector += ':checked';
                         }
-                        $(selector).each(function() {
+                        $form.find(selector).each(function() {
                             val = $(this).val();
                             if (val && val != param.default) {
                                 param_map[output_key].push(val);
@@ -138,7 +139,7 @@ if (gcal_url) {
                     case 'ymdhm':
                     case 'ymd':
                     case 'hm':
-                        $('#' + key + ' .inputdate').each(function() {
+                        $form.find('#' + key + ' .inputdate').each(function() {
                             year = $(this).find(':input[name^="year_' + key + '"]').val();
                             month = $(this).find(':input[name^="month_' + key + '"]').val();
                             day = $(this).find(':input[name^="day_' + key + '"]').val();
@@ -172,7 +173,7 @@ if (gcal_url) {
                         });
                         break;
                     case 'resid':
-                        $('#' + key + ' .selectlistline').each(function() {
+                        $form.find('#' + key + ' .selectlistline').each(function() {
                             param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
                         });
                         break;
@@ -181,10 +182,10 @@ if (gcal_url) {
                         iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
                         その場合、textareaを読み取る。
                          */
-                        if (param_map.body_format && $('#body iframe').length > 0) {
-                            param_map.body = $('#body iframe').contents().find('body.cke_editable').html();
+                        if (param_map.body_format && $form.find('#body iframe').length > 0) {
+                            param_map.body = $form.find('#body iframe').contents().find('body.cke_editable').html();
                         } else {
-                            param_map.body = $(':input[name="body"]').val();
+                            param_map.body = $form.find(':input[name="body"]').val();
                         }
                         break;
                 }
