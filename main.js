@@ -36,23 +36,23 @@ var convert_params = {
     delegate_allowed: { name: "代理出席", type: "normal" },
     // 【繰り返しタブ】
     recurrent_type: { name: "パターン", type: "checked", default: "none" },
-    recurrent_interval: { name: "日・週・月・年毎", type: "normal" },
-    days_of_week: { name: "週毎の曜日", type: "checked", array: true },
-    month_of_year: { name: "年毎の月", type: "normal" },
-    recurrent_subtype: { name: "月・年毎の特定日・週", type: "checked" },
-    day_of_month: { name: "月・年毎の特定日", type: "normal" },
-    week_of_month: { name: "月・年毎の特定週", type: "normal" },
-    day_of_week: { name: "月・年毎の特定週の曜日", type: "normal" },
-    is_all_day_recurrent: { name: "終日", type: "checked" },
-    irregular_dates: { name: "不定期日付", type: "ymd", array: true },
-    dtstart_recurrent: { name: "開始時刻", type: "hm", output_key: "dtstart" },
-    dtend_recurrent: { name: "終了時刻", type: "hm", output_key: "dtend" },
-    recurrent_start: { name: "開始日", type: "normal" },
-    limit_type: { name: "期限", type: "checked" },
-    limit_count: { name: "反復回数", type: "normal" },
-    limit_date: { name: "終了日", type: "ymd" },
-    recurrent_except_rule: { name: "特例日の扱い", type: "normal" },
-    recurrent_except_target: { name: "特例日", type: "checked", array: true },
+    recurrent_interval: { name: "日・週・月・年毎", type: "normal", recurrent: true },
+    days_of_week: { name: "週毎の曜日", type: "checked", array: true, recurrent: true },
+    month_of_year: { name: "年毎の月", type: "normal", recurrent: true },
+    recurrent_subtype: { name: "月・年毎の特定日・週", type: "checked", recurrent: true },
+    day_of_month: { name: "月・年毎の特定日", type: "normal", recurrent: true },
+    week_of_month: { name: "月・年毎の特定週", type: "normal", recurrent: true },
+    day_of_week: { name: "月・年毎の特定週の曜日", type: "normal", recurrent: true },
+    is_all_day_recurrent: { name: "終日", type: "checked", recurrent: true },
+    irregular_dates: { name: "不定期日付", type: "ymd", array: true, recurrent: true },
+    dtstart_recurrent: { name: "開始時刻", type: "hm", output_key: "dtstart", recurrent: true },
+    dtend_recurrent: { name: "終了時刻", type: "hm", output_key: "dtend", recurrent: true },
+    recurrent_start: { name: "開始日", type: "normal", recurrent: true },
+    limit_type: { name: "期限", type: "checked", recurrent: true },
+    limit_count: { name: "反復回数", type: "normal", recurrent: true },
+    limit_date: { name: "終了日", type: "ymd", recurrent: true },
+    recurrent_except_rule: { name: "特例日の扱い", type: "normal", recurrent: true },
+    recurrent_except_target: { name: "特例日", type: "checked", array: true, recurrent: true },
     // 【その他タブ】
     radio_reflection: { name: "来館者の申請", type: "checked", default: "0" },
     visitor_company: { name: "来館者１会社名", type: "normal" },
@@ -120,77 +120,76 @@ if (gcal_url) {
             Object.keys(convert_params).forEach(function(key) {
                 var param = convert_params[key];
                 var output_key = param.output_key || key;
-                var selector, val, year, month, day, hour, minute;
-                param_map[output_key] = [];
-                switch (param.type) {
-                    case 'normal':
-                    case 'checked':
-                        selector = ':input[name="' + key + '"]';
-                        if (param.type == 'checked') {
-                            selector += ':checked';
-                        }
-                        $form.find(selector).each(function() {
-                            val = $(this).val();
-                            if (val && val != param.default) {
-                                param_map[output_key].push(val);
+                var selector, val, year, month, day, hour, minute, ymd, hm;
+                if (param_map.recurrent_type === 'none' && param.recurrent) {
+                    // skip
+                } else {
+                    param_map[output_key] = [];
+                    switch (param.type) {
+                        case 'normal':
+                        case 'checked':
+                            selector = ':input[name="' + key + '"]';
+                            if (param.type == 'checked') {
+                                selector += ':checked';
                             }
-                        });
-                        break;
-                    case 'ymdhm':
-                    case 'ymd':
-                    case 'hm':
-                        $form.find('#' + key + ' .inputdate').each(function() {
-                            year = $(this).find(':input[name^="year_' + key + '"]').val();
-                            month = $(this).find(':input[name^="month_' + key + '"]').val();
-                            day = $(this).find(':input[name^="day_' + key + '"]').val();
-                            hour = $(this).find(':input[name^="hour_' + key + '"]').val();
-                            minute = $(this).find(':input[name^="minute_' + key + '"]').val();
-                            switch (param.type) {
-                                case 'ymdhm':
-                                    if (year && month && day && hour && minute) {
-                                        param_map[output_key].push(year + '-' +
-                                            ('00' + month).slice(-2) + '-' +
-                                            ('00' + day).slice(-2) + ' ' +
-                                            ('00' + hour).slice(-2) + ':' +
-                                            ('00' + minute).slice(-2) + ':00');
-                                    }
-                                    break;
-                                case 'ymd':
-                                    if (year && month && day) {
-                                        param_map[output_key].push(year + '-' +
-                                            ('00' + month).slice(-2) + '-' +
-                                            ('00' + day).slice(-2) + ' ');
-                                    }
-                                    break;
-                                case 'hm':
-                                    if (hour && minute) {
-                                        param_map[output_key].push('2017-01-01 ' +
-                                            ('00' + hour).slice(-2) + ':' +
-                                            ('00' + minute).slice(-2) + ':00');
-                                    }
-                                    break;
+                            $form.find(selector).each(function() {
+                                val = $(this).val();
+                                if (val && val != param.default) {
+                                    param_map[output_key].push(val);
+                                }
+                            });
+                            break;
+                        case 'ymdhm':
+                        case 'ymd':
+                        case 'hm':
+                            $form.find('#' + key + ' .inputdate').each(function() {
+                                year = $(this).find(':input[name^="year_' + key + '"]').val();
+                                month = $(this).find(':input[name^="month_' + key + '"]').val();
+                                day = $(this).find(':input[name^="day_' + key + '"]').val();
+                                hour = $(this).find(':input[name^="hour_' + key + '"]').val();
+                                minute = $(this).find(':input[name^="minute_' + key + '"]').val();
+                                ymd = year + '-' + ('00' + month).slice(-2) + '-' + ('00' + day).slice(-2);
+                                hm = ('00' + hour).slice(-2) + ':' + ('00' + minute).slice(-2) + ':00';
+                                switch (param.type) {
+                                    case 'ymdhm':
+                                        if (year && month && day && hour && minute) {
+                                            param_map[output_key].push(ymd + ' ' + hm);
+                                        }
+                                        break;
+                                    case 'ymd':
+                                        if (year && month && day) {
+                                            param_map[output_key].push(ymd);
+                                        }
+                                        break;
+                                    case 'hm':
+                                        if (hour && minute) {
+                                            param_map[output_key].push('2017-01-01 ' + hm);
+                                        }
+                                        break;
+                                }
+                            });
+                            break;
+                        case 'resid':
+                            $form.find('#' + key + ' .selectlistline').each(function() {
+                                param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
+                            });
+                            break;
+                        case 'body':
+                            /* 文字修飾を使用している場合、textarea[name=body]は、初期表示時の内容から更新されない為、
+                            iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
+                            その場合、textareaを読み取る。
+                             */
+                            // if (param_map.body_format && $form.find('#body iframe').length > 0) {
+                            if ($form.find('#body iframe').length > 0) {
+                                param_map.body = $form.find('#body iframe').contents().find('body.cke_editable').html();
+                            } else {
+                                param_map.body = $form.find(':input[name="body"]').val();
                             }
-                        });
-                        break;
-                    case 'resid':
-                        $form.find('#' + key + ' .selectlistline').each(function() {
-                            param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
-                        });
-                        break;
-                    case 'body':
-                        /* 文字修飾を使用している場合、textarea[name=body]は、初期表示時の内容から更新されない為、
-                        iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
-                        その場合、textareaを読み取る。
-                         */
-                        if (param_map.body_format && $form.find('#body iframe').length > 0) {
-                            param_map.body = $form.find('#body iframe').contents().find('body.cke_editable').html();
-                        } else {
-                            param_map.body = $form.find(':input[name="body"]').val();
-                        }
-                        break;
-                }
-                if (param_map[output_key].length === 0) {
-                    delete param_map[output_key];
+                            break;
+                    }
+                    if (param_map[output_key].length === 0) {
+                        delete param_map[output_key];
+                    }
                 }
 
             });
