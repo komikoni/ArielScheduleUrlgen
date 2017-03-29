@@ -2,8 +2,8 @@
 // TODO : convert_paramsを読み込んで、パラメータの出力有無選択
 // TODO : ☓ボタンを追加する、ESCキーで表示解除する
 var $ = require('jquery');
-require('clipboard');
-var clipboard = new Clipboard('.btn');
+;
+var clipboard = require('clipboard')('.btn');
 var $tool = $('#ariel_schedule_urlgen');
 var ariel_protocol = $tool.data('protocol');
 var ariel_hostname = $tool.data('hostname');
