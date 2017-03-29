@@ -238,18 +238,24 @@ info_html += '<textarea id="paramJson" rows="6" cols="100">' + JSON.stringify(pa
 info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
 info_html += '<h2 style="margin-bottom:15px;font-size:12px">Google Shortener URL</h2>';
 info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
-info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortUrl">コピー</button><button id="openShortUrl" >オープン</button><br />';
+info_html += '<input type="text" id="shortUrl" /><button id="copyShortUrl">コピー</button><button id="openShortUrl" >オープン</button><br />';
 
 $info.append(info_html);
 
+$('#generateLongUrl').on('click', function () {
+    $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
+});
 $('#copyLongUrl').on('click', function () {
     clipboadCopy('longUrl');
+});
+$('#openLongUrl').on('click', function () {
+    window.open($('#longUrl').val());
 });
 $('#copyShortUrl').on('click', function () {
     clipboadCopy('shortUrl');
 });
-$('#generateLongUrl').on('click', function () {
-    $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
+$('#openShortUrl').on('click', function () {
+    window.open($('#shortUrl').val());
 });
 $('#generateShortUrl').on('click', function () {
     $.ajax({
