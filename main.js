@@ -1,6 +1,5 @@
 // TODO : 参加者、主催者、施設のチェックボックスを表示しデフォルトの出力対象から外す
 // TODO : convert_paramsを読み込んで、パラメータの出力有無選択
-// TODO : npm install clipboard --save(npm有) でのクリップボードのコピー
 // TODO : ☓ボタンを追加する、ESCキーで表示解除する
 var $ = require('jquery');
 var clipeace = require('clipeace');
@@ -213,9 +212,12 @@ var $info = $('#js-Info');
 var info_html = '';
 info_html += '<h1 style="margin-bottom:30px;font-size:24px">' + ariel_systemname + '予定登録用URL生成' + '</h1>';
 info_html += '<p style="margin-bottom:30px">JSONを見て出力されるURLの内容に問題ないか確認して下さい。 問題ある場合は、JSONを編集し再出力して下さい。 短縮URLを生成する場合は、削除できない為、内容をよくよく確認して下さい。(生成にはapi-keyが必要です)</p>';
-info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" name="facility_flag"/><label for="facility_flag">施設</label></div>';
+info_html += '<h2 style="margin-bottom:15px;font-size:12px">出力要否(必要な場合チェック)</h2>';
+info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label></div>';
+info_html += '<h2 style="margin-bottom:15px;font-size:12px">出力内容(JSON)</h2>';
 info_html += '<textarea id="paramJson" rows="6" cols="100" readonly>' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="copyLongUrl" >URL再生成</button><br />';
 info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
+info_html += '<h2 style="margin-bottom:15px;font-size:12px">Google Shortener URL</h2>';
 info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
 info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortUrl" >コピー</button><button id="openShortUrl" >オープン</button><br />';
 
