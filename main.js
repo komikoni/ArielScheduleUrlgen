@@ -180,9 +180,9 @@ if (gcal_url) {
                              */
                             // if (param_map.body_format && $form.find('#body iframe').length > 0) {
                             if ($form.find('#body iframe').length > 0) {
-                                param_map.body = $form.find('#body iframe').contents().find('body.cke_editable').html();
+                                param_map[output_key].push($form.find('#body iframe').contents().find('body.cke_editable').html());
                             } else {
-                                param_map.body = $form.find(':input[name="body"]').val();
+                                param_map[output_key].push($form.find(':input[name="body"]').val());
                             }
                             break;
                     }
