@@ -234,7 +234,7 @@ info_html += '<p style="margin-bottom:30px">JSONを見て出力されるURLの�
 info_html += '<h2 style="margin-bottom:15px;font-size:12px">出力要否(必要な場合チェック)</h2>';
 info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label></div>';
 info_html += '<h2 style="margin-bottom:15px;font-size:12px">出力内容(JSON)</h2>';
-info_html += '<textarea id="paramJson" rows="6" cols="100" readonly>' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="copyLongUrl" >URL再生成</button><br />';
+info_html += '<textarea id="paramJson" rows="6" cols="100">' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="generateLongUrl" >URL再生成</button><br />';
 info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
 info_html += '<h2 style="margin-bottom:15px;font-size:12px">Google Shortener URL</h2>';
 info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
@@ -247,6 +247,9 @@ $('#copyLongUrl').on('click', function () {
 });
 $('#copyShortUrl').on('click', function () {
     clipboadCopy('shortUrl');
+});
+$('#generateLongUrl').on('click', function () {
+    $('#longUrl').val(generateArielUrl($('#paramJson').val()));
 });
 $('#generateShortUrl').on('click', function () {
     $.ajax({
