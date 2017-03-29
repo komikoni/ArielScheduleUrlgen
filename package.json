@@ -19,5 +19,8 @@
     "licensify": "^3.1.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "clipeace": "0.0.7"
   }
 }

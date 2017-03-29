@@ -1,8 +1,9 @@
 // TODO : 参加者、主催者、施設のチェックボックスを表示しデフォルトの出力対象から外す
 // TODO : convert_paramsを読み込んで、パラメータの出力有無選択
-// TODO : clipboard.js(npm有) でのクリップボードのコピー
+// TODO : npm install clipboard --save(npm有) でのクリップボードのコピー
 // TODO : ☓ボタンを追加する、ESCキーで表示解除する
 var $ = require('jquery');
+var clipeace = require('clipeace');
 var $tool = $('#ariel_schedule_urlgen');
 var ariel_protocol = $tool.data('protocol');
 var ariel_hostname = $tool.data('hostname');
@@ -52,34 +53,34 @@ var convert_params = {
     recurrent_except_rule: { name: "特例日の扱い", type: "normal", default: "0", tab: "recurrent" },
     recurrent_except_target: { name: "特例日", type: "checked", array: true, tab: "recurrent" },
     // 【その他タブ】
-    radio_reflection: { name: "来館者の申請", type: "checked", default: "0" },
-    visitor_company: { name: "来館者１会社名", type: "normal" },
-    visitor_post: { name: "来館者１役職", type: "normal" },
-    visitor_name: { name: "来館者１氏名", type: "normal" },
-    visitor_company2: { name: "来館者２会社名", type: "normal" },
-    visitor_post2: { name: "来館者２役職", type: "normal" },
-    visitor_name2: { name: "来館者２氏名", type: "normal" },
-    visitor_company3: { name: "来館者３会社名", type: "normal" },
-    visitor_post3: { name: "来館者３役職", type: "normal" },
-    visitor_name3: { name: "来館者３氏名", type: "normal" },
-    visitor_company4: { name: "来館者４会社名", type: "normal" },
-    visitor_post4: { name: "来館者４役職", type: "normal" },
-    visitor_name4: { name: "来館者４氏名", type: "normal" },
-    numeric_field: { name: "来館人数", type: "normal", default: "1" },
-    wireless_select: { name: "無線LAN利用", type: "checked", default: "0" },
-    group_field: { name: "面会者部門名", type: "resid" },
-    tel_dept: { name: "面会者部門内線番号", type: "normal" },
-    user_visitor: { name: "面会者氏名", type: "resid" },
-    tel_extension: { name: "面会者内線番号", type: "normal" },
-    group_field_2: { name: "代替者１部門名", type: "resid" },
-    tel_dept_2: { name: "代替者１部門内線番号", type: "normal" },
-    user_visitor_2: { name: "代替者１氏名", type: "resid" },
-    tel_extension_2: { name: "代替者１内線番号", type: "normal" },
-    group_field_3: { name: "代替者２部門名", type: "resid" },
-    tel_dept_3: { name: "代替者２部門内線番号", type: "normal" },
-    user_visitor_3: { name: "代替者２氏名", type: "resid" },
-    tel_extension_3: { name: "代替者２部門内線番号", type: "normal" },
-    text_field: { name: "受付への伝言", type: "normal" },
+    radio_reflection: { name: "来館者の申請", type: "checked", default: "0", tab: "other" },
+    visitor_company: { name: "来館者１会社名", type: "normal", tab: "other" },
+    visitor_post: { name: "来館者１役職", type: "normal", tab: "other" },
+    visitor_name: { name: "来館者１氏名", type: "normal", tab: "other" },
+    visitor_company2: { name: "来館者２会社名", type: "normal", tab: "other" },
+    visitor_post2: { name: "来館者２役職", type: "normal", tab: "other" },
+    visitor_name2: { name: "来館者２氏名", type: "normal", tab: "other" },
+    visitor_company3: { name: "来館者３会社名", type: "normal", tab: "other" },
+    visitor_post3: { name: "来館者３役職", type: "normal", tab: "other" },
+    visitor_name3: { name: "来館者３氏名", type: "normal", tab: "other" },
+    visitor_company4: { name: "来館者４会社名", type: "normal", tab: "other" },
+    visitor_post4: { name: "来館者４役職", type: "normal", tab: "other" },
+    visitor_name4: { name: "来館者４氏名", type: "normal", tab: "other" },
+    numeric_field: { name: "来館人数", type: "normal", default: "1", tab: "other" },
+    wireless_select: { name: "無線LAN利用", type: "checked", default: "0", tab: "other" },
+    group_field: { name: "面会者部門名", type: "resid", tab: "other" },
+    tel_dept: { name: "面会者部門内線番号", type: "normal", tab: "other" },
+    user_visitor: { name: "面会者氏名", type: "resid", tab: "other" },
+    tel_extension: { name: "面会者内線番号", type: "normal", tab: "other" },
+    group_field_2: { name: "代替者１部門名", type: "resid", tab: "other" },
+    tel_dept_2: { name: "代替者１部門内線番号", type: "normal", tab: "other" },
+    user_visitor_2: { name: "代替者１氏名", type: "resid", tab: "other" },
+    tel_extension_2: { name: "代替者１内線番号", type: "normal", tab: "other" },
+    group_field_3: { name: "代替者２部門名", type: "resid", tab: "other" },
+    tel_dept_3: { name: "代替者２部門内線番号", type: "normal", tab: "other" },
+    user_visitor_3: { name: "代替者２氏名", type: "resid", tab: "other" },
+    tel_extension_3: { name: "代替者２部門内線番号", type: "normal", tab: "other" },
+    text_field: { name: "受付への伝言", type: "normal", tab: "other" },
 };
 
 var param_map = {};
@@ -220,6 +221,12 @@ info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortU
 
 $info.append(info_html);
 
+$('#copyLongUrl').on('click', function() {
+    clipeace($('#longUrl')[0]);
+    });
+$('#copyShortUrl').on('click', function() {
+    clipeace($('#shortUrl')[0]);
+});
 $('#generateShortUrl').on('click', function() {
     $.ajax({
         type: "POST",
