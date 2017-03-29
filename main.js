@@ -163,7 +163,7 @@ if (gcal_url) {
                                         break;
                                     case 'hm':
                                         if (hour && minute) {
-                                            param_map[output_key].push('0000-00-00 ' + hm);
+                                            param_map[output_key].push('0001-01-01 ' + hm);
                                         }
                                         break;
                                 }
@@ -184,6 +184,7 @@ if (gcal_url) {
                             }
                             break;
                     }
+                    // 空パラメータは削除、配列許容項目以外は先頭項目を再設定
                     if (param_map[output_key].length === 0) {
                         delete param_map[output_key];
                     } else if (!param.array) {
