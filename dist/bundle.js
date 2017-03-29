@@ -142,6 +142,7 @@ if (gcal_url) {
                 if ($form.find(':input[name="recurrent_type"]:checked').val() === 'none' && param.tab === 'recurrent') {
                     // skip
                 } else {
+                    // 一旦全ての項目を配列項目として処理
                     param_map[output_key] = [];
                     switch (param.type) {
                         case 'normal':
@@ -193,11 +194,8 @@ if (gcal_url) {
                             });
                             break;
                         case 'body':
-                            /* 文字修飾を使用している場合、textarea[name=body]は、初期表示時の内容から更新されない為、
-                            iframe内のhtmlを直接読み取る。ただし、タブを開いていない場合iframeが生成され無い為、
-                            その場合、textareaを読み取る。
-                             */
-                            // if (param_map.body_format && $form.find('#body iframe').length > 0) {
+                            /* 文字修飾なし,文字修飾あり(タブ未表示)=>textarea[name=body]を、文字修飾あり(タブ表示済)=>iframe内を使用
+                              (文字修飾が有っても、タブを開いていない場合iframeが生成され無い) */
                             if ($form.find('#body iframe').length > 0) {
                                 param_map[output_key].push($form.find('#body iframe').contents().find('body.cke_editable').html());
                             } else {
