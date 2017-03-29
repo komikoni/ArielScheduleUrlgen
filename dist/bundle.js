@@ -139,7 +139,7 @@ if (gcal_url) {
                 var output_key = param.output_key || key;
                 var selector, val, year, month, day, hour, minute, ymd, hm;
                 // 繰り返し指定がないときは繰返し項目を出力しない。
-                if ($form.find(':input[name="recurrent_type"]').val() === 'none' && param.tab === 'recurrent') {
+                if ($form.find(':input[name="recurrent_type"]:checked').val() === 'none' && param.tab === 'recurrent') {
                     // skip
                 } else {
                     param_map[output_key] = [];
