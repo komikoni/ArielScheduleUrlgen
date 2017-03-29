@@ -100,119 +100,123 @@ var convert_params = {
     text_field: { name: "受付への伝言", type: "normal", tab: "other" },
 };
 
-var param_map = {};
 
-var gcal_url = $('a[href*="//www.google.com/calendar/event?"],' +
-    'a[href*="//www.google.com/calendar/render?"]').prop('href');
-if (gcal_url) {
-    var gcal_param = gcal_url.match(/[?].+/)[0].substr(1);
-    var pair = gcal_param.split('&');
-    for (var i = 0; pair[i]; i++) {
-        var kv = pair[i].split('=');
-        var key = kv[0];
-        var value = decodeURIComponent((kv[1] || '').replace(/[+]/g, '%20'));
-        switch (key) {
-            case 'text':
-                param_map.title = value;
-                break;
-            case 'details':
-                param_map.body = value;
-                break;
-            case 'location':
-                param_map.location = value;
-                break;
-            case 'dates':
-                var dates = value.split('/');
-                param_map.dtstart = formatToArielDate(dates[0]);
-                param_map.dtend = formatToArielDate(dates[1]);
-                break;
+function readParameter() {
+    var param_map = {};
+
+    var gcal_url = $('a[href*="//www.google.com/calendar/event?"],' +
+        'a[href*="//www.google.com/calendar/render?"]').prop('href');
+    if (gcal_url) {
+        var gcal_param = gcal_url.match(/[?].+/)[0].substr(1);
+        var pair = gcal_param.split('&');
+        for (var i = 0; pair[i]; i++) {
+            var kv = pair[i].split('=');
+            var key = kv[0];
+            var value = decodeURIComponent((kv[1] || '').replace(/[+]/g, '%20'));
+            switch (key) {
+                case 'text':
+                    param_map.title = value;
+                    break;
+                case 'details':
+                    param_map.body = value;
+                    break;
+                case 'location':
+                    param_map.location = value;
+                    break;
+                case 'dates':
+                    var dates = value.split('/');
+                    param_map.dtstart = formatToArielDate(dates[0]);
+                    param_map.dtend = formatToArielDate(dates[1]);
+                    break;
+            }
+        }
+    } else {
+        if (window.location.hostname == ariel_hostname) {
+            if ($(':input[name="resourceType"][value="/atypes/ariel/schedule"]')) {
+                var $form = $('form[name="edit"]');
+                var recurrent_type = $form.find(':input[name="recurrent_type"]:checked').val();
+
+                Object.keys(convert_params).forEach(function(key) {
+                    var param = convert_params[key];
+                    var output_key = param.output_key || key;
+                    // 繰り返し指定がないときは繰返し項目を出力しない。
+                    if (param.tab !== 'recurrent' || recurrent_type !== 'none') {
+                        // 一旦全ての項目を配列項目として処理
+                        param_map[output_key] = [];
+                        switch (param.type) {
+                            case 'normal':
+                            case 'checked':
+                                var selector = ':input[name="' + key + '"]';
+                                if (param.type == 'checked') {
+                                    selector += ':checked';
+                                }
+                                $form.find(selector).each(function() {
+                                    var val = $(this).val();
+                                    if (val && val != param.default) {
+                                        param_map[output_key].push(val);
+                                    }
+                                });
+                                break;
+                            case 'ymdhm':
+                            case 'ymd':
+                            case 'hm':
+                                $form.find('#' + key + ' .inputdate').each(function() {
+                                    var $this = $(this);
+                                    var year = $this.find(':input[name^="year_' + key + '"]').val();
+                                    var month = $this.find(':input[name^="month_' + key + '"]').val();
+                                    var day = $this.find(':input[name^="day_' + key + '"]').val();
+                                    var hour = $this.find(':input[name^="hour_' + key + '"]').val();
+                                    var minute = $this.find(':input[name^="minute_' + key + '"]').val();
+                                    var ymd = year + '-' + ('00' + month).slice(-2) + '-' + ('00' + day).slice(-2);
+                                    var hm = ('00' + hour).slice(-2) + ':' + ('00' + minute).slice(-2) + ':00';
+                                    switch (param.type) {
+                                        case 'ymdhm':
+                                            if (year && month && day && hour && minute) {
+                                                param_map[output_key].push(ymd + ' ' + hm);
+                                            }
+                                            break;
+                                        case 'ymd':
+                                            if (year && month && day) {
+                                                param_map[output_key].push(ymd);
+                                            }
+                                            break;
+                                        case 'hm':
+                                            if (hour && minute) {
+                                                param_map[output_key].push('0001-01-01 ' + hm);
+                                            }
+                                            break;
+                                    }
+                                });
+                                break;
+                            case 'resid':
+                                $form.find('#' + key + ' .selectlistline').each(function() {
+                                    param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
+                                });
+                                break;
+                            case 'body':
+                                /* 文字修飾なし,文字修飾あり(タブ未表示)の場合、textarea[name=body]を、文字修飾あり(タブ表示済)の場合、iframe内の情報を取得
+                                  (文字修飾が有っても、タブを開いていない場合iframeが生成され無い) */
+                                if ($form.find('#body iframe').length > 0) {
+                                    param_map[output_key].push($form.find('#body iframe').contents().find('body.cke_editable').html());
+                                } else {
+                                    param_map[output_key].push($form.find(':input[name="body"]').val());
+                                }
+                                break;
+                        }
+                        // 空パラメータは削除、配列許容項目以外は先頭項目を再設定
+                        if (param_map[output_key].length === 0) {
+                            delete param_map[output_key];
+                        } else if (!param.array) {
+                            param_map[output_key] = param_map[output_key][0];
+                        }
+                    }
+                });
+            }
         }
     }
-} else {
-    if (window.location.hostname == ariel_hostname) {
-        if ($(':input[name="resourceType"][value="/atypes/ariel/schedule"]')) {
-            var $form = $('form[name="edit"]');
-            var recurrent_type = $form.find(':input[name="recurrent_type"]:checked').val();
-
-            Object.keys(convert_params).forEach(function(key) {
-                var param = convert_params[key];
-                var output_key = param.output_key || key;
-                // 繰り返し指定がないときは繰返し項目を出力しない。
-                if (param.tab !== 'recurrent' || recurrent_type !== 'none') {
-                    // 一旦全ての項目を配列項目として処理
-                    param_map[output_key] = [];
-                    switch (param.type) {
-                        case 'normal':
-                        case 'checked':
-                            var selector = ':input[name="' + key + '"]';
-                            if (param.type == 'checked') {
-                                selector += ':checked';
-                            }
-                            $form.find(selector).each(function() {
-                                var val = $(this).val();
-                                if (val && val != param.default) {
-                                    param_map[output_key].push(val);
-                                }
-                            });
-                            break;
-                        case 'ymdhm':
-                        case 'ymd':
-                        case 'hm':
-                            $form.find('#' + key + ' .inputdate').each(function() {
-                                var $this = $(this);
-                                var year = $this.find(':input[name^="year_' + key + '"]').val();
-                                var month = $this.find(':input[name^="month_' + key + '"]').val();
-                                var day = $this.find(':input[name^="day_' + key + '"]').val();
-                                var hour = $this.find(':input[name^="hour_' + key + '"]').val();
-                                var minute = $this.find(':input[name^="minute_' + key + '"]').val();
-                                var ymd = year + '-' + ('00' + month).slice(-2) + '-' + ('00' + day).slice(-2);
-                                var hm = ('00' + hour).slice(-2) + ':' + ('00' + minute).slice(-2) + ':00';
-                                switch (param.type) {
-                                    case 'ymdhm':
-                                        if (year && month && day && hour && minute) {
-                                            param_map[output_key].push(ymd + ' ' + hm);
-                                        }
-                                        break;
-                                    case 'ymd':
-                                        if (year && month && day) {
-                                            param_map[output_key].push(ymd);
-                                        }
-                                        break;
-                                    case 'hm':
-                                        if (hour && minute) {
-                                            param_map[output_key].push('0001-01-01 ' + hm);
-                                        }
-                                        break;
-                                }
-                            });
-                            break;
-                        case 'resid':
-                            $form.find('#' + key + ' .selectlistline').each(function() {
-                                param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
-                            });
-                            break;
-                        case 'body':
-                            /* 文字修飾なし,文字修飾あり(タブ未表示)の場合、textarea[name=body]を、文字修飾あり(タブ表示済)の場合、iframe内の情報を取得
-                              (文字修飾が有っても、タブを開いていない場合iframeが生成され無い) */
-                            if ($form.find('#body iframe').length > 0) {
-                                param_map[output_key].push($form.find('#body iframe').contents().find('body.cke_editable').html());
-                            } else {
-                                param_map[output_key].push($form.find(':input[name="body"]').val());
-                            }
-                            break;
-                    }
-                    // 空パラメータは削除、配列許容項目以外は先頭項目を再設定
-                    if (param_map[output_key].length === 0) {
-                        delete param_map[output_key];
-                    } else if (!param.array) {
-                        param_map[output_key] = param_map[output_key][0];
-                    }
-                }
-            });
-        }
-    }
+    return param_map;
 }
-
+var param_map = readParameter();
 var ariel_url = generateArielUrl(param_map);
 
 $('#js-GlayLayer').remove();
@@ -230,6 +234,7 @@ info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力要否(必要�
 info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label></div>';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力内容(JSON)</h2>';
 info_html += '<textarea id="paramJson" rows="6" cols="100" spellcheck="false">' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="generateLongUrl" >URL再生成</button><br />';
+info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力内容(LongURL)</h2>';
 info_html += '<textarea id="longUrl" rows="6" cols="100" spellcheck="false">' + ariel_url + '</textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">Google Shortener URL</h2>';
 info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
