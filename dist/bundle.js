@@ -323,8 +323,7 @@ function generateArielUrl(param_map) {
 }
 
 function clipboadCopy(id) {
-    var urltext = document.getElementById(id);
-    urltext.select();
+    document.getElementById(id).select();
     document.execCommand("copy");
 }
 },{"jquery":2}],2:[function(require,module,exports){

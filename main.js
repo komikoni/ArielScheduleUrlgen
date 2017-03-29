@@ -304,7 +304,6 @@ function generateArielUrl(param_map) {
 }
 
 function clipboadCopy(id) {
-    var urltext = document.getElementById(id);
-    urltext.select();
+    document.getElementById(id).select();
     document.execCommand("copy");
 }
