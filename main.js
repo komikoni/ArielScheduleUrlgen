@@ -3,7 +3,6 @@
 // TODO : ☓ボタンを追加する、ESCキーで表示解除する
 var $ = require('jquery');
 ;
-var clipboard = require('clipboard')('.btn');
 var $tool = $('#ariel_schedule_urlgen');
 var ariel_protocol = $tool.data('protocol');
 var ariel_hostname = $tool.data('hostname');
