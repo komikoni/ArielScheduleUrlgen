@@ -20,8 +20,7 @@
 // TODO : 参加者、主催者、施設のチェックボックスを表示しデフォルトの出力対象から外す
 // TODO : convert_paramsを読み込んで、パラメータの出力有無選択
 // TODO : ☓ボタンを追加する、ESCキーで表示解除する
-var $ = require('jquery');
-;
+var $ = require('jquery');;
 var $tool = $('#ariel_schedule_urlgen');
 var ariel_protocol = $tool.data('protocol');
 var ariel_hostname = $tool.data('hostname');
@@ -132,27 +131,25 @@ if (gcal_url) {
 } else {
     if (window.location.hostname == ariel_hostname) {
         if ($(':input[name="resourceType"][value="/atypes/ariel/schedule"]')) {
-            $form = $('form[name="edit"]');
+            var $form = $('form[name="edit"]');
+            var recurrent_type = $form.find(':input[name="recurrent_type"]:checked').val();
 
-            Object.keys(convert_params).forEach(function (key) {
+            Object.keys(convert_params).forEach(function(key) {
                 var param = convert_params[key];
                 var output_key = param.output_key || key;
-                var selector, val, year, month, day, hour, minute, ymd, hm;
                 // 繰り返し指定がないときは繰返し項目を出力しない。
-                if ($form.find(':input[name="recurrent_type"]:checked').val() === 'none' && param.tab === 'recurrent') {
-                    // skip
-                } else {
+                if (param.tab !== 'recurrent' || recurrent_type !== 'none') {
                     // 一旦全ての項目を配列項目として処理
                     param_map[output_key] = [];
                     switch (param.type) {
                         case 'normal':
                         case 'checked':
-                            selector = ':input[name="' + key + '"]';
+                            var selector = ':input[name="' + key + '"]';
                             if (param.type == 'checked') {
                                 selector += ':checked';
                             }
-                            $form.find(selector).each(function () {
-                                val = $(this).val();
+                            $form.find(selector).each(function() {
+                                var val = $(this).val();
                                 if (val && val != param.default) {
                                     param_map[output_key].push(val);
                                 }
@@ -161,14 +158,14 @@ if (gcal_url) {
                         case 'ymdhm':
                         case 'ymd':
                         case 'hm':
-                            $form.find('#' + key + ' .inputdate').each(function () {
-                                year = $(this).find(':input[name^="year_' + key + '"]').val();
-                                month = $(this).find(':input[name^="month_' + key + '"]').val();
-                                day = $(this).find(':input[name^="day_' + key + '"]').val();
-                                hour = $(this).find(':input[name^="hour_' + key + '"]').val();
-                                minute = $(this).find(':input[name^="minute_' + key + '"]').val();
-                                ymd = year + '-' + ('00' + month).slice(-2) + '-' + ('00' + day).slice(-2);
-                                hm = ('00' + hour).slice(-2) + ':' + ('00' + minute).slice(-2) + ':00';
+                            $form.find('#' + key + ' .inputdate').each(function() {
+                                var year = $(this).find(':input[name^="year_' + key + '"]').val();
+                                var month = $(this).find(':input[name^="month_' + key + '"]').val();
+                                var day = $(this).find(':input[name^="day_' + key + '"]').val();
+                                var hour = $(this).find(':input[name^="hour_' + key + '"]').val();
+                                var minute = $(this).find(':input[name^="minute_' + key + '"]').val();
+                                var ymd = year + '-' + ('00' + month).slice(-2) + '-' + ('00' + day).slice(-2);
+                                var hm = ('00' + hour).slice(-2) + ':' + ('00' + minute).slice(-2) + ':00';
                                 switch (param.type) {
                                     case 'ymdhm':
                                         if (year && month && day && hour && minute) {
@@ -189,12 +186,12 @@ if (gcal_url) {
                             });
                             break;
                         case 'resid':
-                            $form.find('#' + key + ' .selectlistline').each(function () {
+                            $form.find('#' + key + ' .selectlistline').each(function() {
                                 param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
                             });
                             break;
                         case 'body':
-                            /* 文字修飾なし,文字修飾あり(タブ未表示)=>textarea[name=body]を、文字修飾あり(タブ表示済)=>iframe内を使用
+                            /* 文字修飾なし,文字修飾あり(タブ未表示)の場合、textarea[name=body]を、文字修飾あり(タブ表示済)の場合、iframe内の情報を取得
                               (文字修飾が有っても、タブを開いていない場合iframeが生成され無い) */
                             if ($form.find('#body iframe').length > 0) {
                                 param_map[output_key].push($form.find('#body iframe').contents().find('body.cke_editable').html());
@@ -239,22 +236,22 @@ info_html += '<input type="text" id="shortUrl" /><button id="copyShortUrl">コ�
 
 $info.append(info_html);
 
-$('#generateLongUrl').on('click', function () {
+$('#generateLongUrl').on('click', function() {
     $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
 });
-$('#copyLongUrl').on('click', function () {
+$('#copyLongUrl').on('click', function() {
     clipboadCopy('longUrl');
 });
-$('#openLongUrl').on('click', function () {
+$('#openLongUrl').on('click', function() {
     window.open($('#longUrl').val());
 });
-$('#copyShortUrl').on('click', function () {
+$('#copyShortUrl').on('click', function() {
     clipboadCopy('shortUrl');
 });
-$('#openShortUrl').on('click', function () {
+$('#openShortUrl').on('click', function() {
     window.open($('#shortUrl').val());
 });
-$('#generateShortUrl').on('click', function () {
+$('#generateShortUrl').on('click', function() {
     $.ajax({
         type: "POST",
         url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
@@ -263,7 +260,7 @@ $('#generateShortUrl').on('click', function () {
         data: JSON.stringify({
             "longUrl": $('#longUrl').text()
         }),
-        success: function (j_data) {
+        success: function(j_data) {
             $('#shortUrl').val(j_data.id);
         }
     });
@@ -271,7 +268,7 @@ $('#generateShortUrl').on('click', function () {
 
 /*レイヤー削除*/
 // TODO: ESCキーが押されたらを追加
-$(document).on('click', $layer, function (evt) {
+$(document).on('click', $layer, function(evt) {
     if (!$(evt.target).closest('#js-Info').length) {
         $info.remove();
         $layer.remove();
@@ -299,7 +296,7 @@ function formatToArielDate(iso8601DateTime) {
 
 function generateArielUrl(param_map) {
     var ariel_param = "";
-    Object.keys(param_map).forEach(function (key) {
+    Object.keys(param_map).forEach(function(key) {
         var param = param_map[key];
         if (param instanceof Array) {
             for (i = 0; i < param.length; i++) {
@@ -320,7 +317,6 @@ function clipboadCopy(id) {
     urltext.select();
     document.execCommand("copy");
 }
-
 },{"jquery":2}],2:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.2.1
