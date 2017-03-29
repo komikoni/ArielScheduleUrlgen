@@ -230,7 +230,7 @@ $('#copyShortUrl').on('click', function () {
     clipboadCopy('shortUrl');
 });
 $('#generateLongUrl').on('click', function () {
-    $('#longUrl').val(generateArielUrl($('#paramJson').val()));
+    $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
 });
 $('#generateShortUrl').on('click', function () {
     $.ajax({
