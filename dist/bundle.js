@@ -215,9 +215,7 @@ if (gcal_url) {
 }
 
 var ariel_url = generateArielUrl(param_map);
-//if(window.prompt(ariel_systemname +"予定登録用URLです。コピーして使ってください。\n「OK」で生成したURLを別ウィンドウで開きます。",ariel_url)){
-//	window.open(ariel_url);
-//}
+
 $('#js-GlayLayer').remove();
 $('#js-Info').remove();
 $("body").append('<div id="js-GlayLayer"><style>#js-GlayLayer{background: #000 none repeat scroll 0 0;height: 100%;left: 0;opacity: 0.6;position: fixed;top: 0;width: 100%;z-index: 9999;}</style></div>');
