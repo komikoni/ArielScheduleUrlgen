@@ -22,8 +22,8 @@ gulp.task('build-js', function () {
         .bundle() // browserifyの実行
         .pipe(source('bundle.js'))
         .pipe(buffer())
-        .pipe(uglify({
-            preserveComments: 'license' // ライセンスコメントを残しつつminify
-        }))
+//        .pipe(uglify({
+//            preserveComments: 'license' // ライセンスコメントを残しつつminify
+//        }))
         .pipe(gulp.dest('./dist')); // 出力
 });
