@@ -231,9 +231,9 @@ var info_html = '';
 info_html += '<h1 style="margin-bottom:30px;font-size:24px">' + ariel_systemname + '予定登録用URL生成' + '</h1>';
 info_html += '<p style="margin-bottom:30px">JSONを見て出力されるURLの内容に問題ないか確認して下さい。 問題ある場合は、JSONを編集し再出力して下さい。 短縮URLを生成する場合は、削除できない為、内容をよくよく確認して下さい。(生成にはapi-keyが必要です)</p>';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力要否(必要な場合チェック)</h2>';
-info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label></div>';
+info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label><button id="reLoad" >再読込</button></div>';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力内容(JSON)</h2>';
-info_html += '<textarea id="paramJson" rows="6" cols="100" spellcheck="false">' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="generateLongUrl" >URL再生成</button><br />';
+info_html += '<textarea id="paramJson" rows="10" cols="100" spellcheck="false">' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="generateLongUrl" >JSONからURLを再生成</button><br />';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力内容(LongURL)</h2>';
 info_html += '<textarea id="longUrl" rows="6" cols="100" spellcheck="false">' + ariel_url + '</textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">Google Shortener URL</h2>';
@@ -242,6 +242,10 @@ info_html += '<input type="text" id="shortUrl" /><button id="copyShortUrl">コ�
 
 $info.append(info_html);
 
+$('#reLoad').on('click', function() {
+    var param_map = readParameter();
+    var ariel_url = generateArielUrl(param_map);
+});
 $('#generateLongUrl').on('click', function() {
     $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
 });
