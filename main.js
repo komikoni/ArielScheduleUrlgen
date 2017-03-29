@@ -2,7 +2,8 @@
 // TODO : convert_paramsを読み込んで、パラメータの出力有無選択
 // TODO : ☓ボタンを追加する、ESCキーで表示解除する
 var $ = require('jquery');
-var clipeace = require('clipeace');
+require('clipboard');
+var clipboard = new Clipboard('.btn');
 var $tool = $('#ariel_schedule_urlgen');
 var ariel_protocol = $tool.data('protocol');
 var ariel_hostname = $tool.data('hostname');
@@ -216,19 +217,13 @@ info_html += '<h2 style="margin-bottom:15px;font-size:12px">出力要否(必要�
 info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label></div>';
 info_html += '<h2 style="margin-bottom:15px;font-size:12px">出力内容(JSON)</h2>';
 info_html += '<textarea id="paramJson" rows="6" cols="100" readonly>' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="copyLongUrl" >URL再生成</button><br />';
-info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
+info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl" class="btn" data-clipboard-target="#longUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
 info_html += '<h2 style="margin-bottom:15px;font-size:12px">Google Shortener URL</h2>';
 info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
-info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortUrl" >コピー</button><button id="openShortUrl" >オープン</button><br />';
+info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortUrl" class="btn" data-clipboard-target="#shortUrl">コピー</button><button id="openShortUrl" >オープン</button><br />';
 
 $info.append(info_html);
 
-$('#copyLongUrl').on('click', function() {
-    clipeace($('#longUrl')[0]);
-    });
-$('#copyShortUrl').on('click', function() {
-    clipeace($('#shortUrl')[0]);
-});
 $('#generateShortUrl').on('click', function() {
     $.ajax({
         type: "POST",

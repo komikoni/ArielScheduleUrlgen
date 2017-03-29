@@ -8,13 +8,12 @@
   },
   "author": "Keisuke Konishi",
   "license": "ISC",
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/komikoni/ArielScheduleUrlgen.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/komikoni/ArielScheduleUrlgen.git"
   },
-    "browser": {
-    "jquery": "./node_modules/jquery/dist/jquery.js",
-    "clipeace": "./node_modules/clipeace/lib/clipeace.js"
+  "browser": {
+    "jquery": "./node_modules/jquery/dist/jquery.js"
   },
   "devDependencies": {
     "browserify": "^14.1.0",
@@ -25,7 +24,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "jquery": "^3.1.1",
-    "clipeace": "0.0.7"
+    "clipboard": "^1.6.1",
+    "jquery": "^3.1.1"
   }
 }
