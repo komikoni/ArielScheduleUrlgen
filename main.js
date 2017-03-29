@@ -115,7 +115,7 @@ if (gcal_url) {
         if ($(':input[name="resourceType"][value="/atypes/ariel/schedule"]')) {
             $form = $('form[name="edit"]');
 
-            Object.keys(convert_params).forEach(function(key) {
+            Object.keys(convert_params).forEach(function (key) {
                 var param = convert_params[key];
                 var output_key = param.output_key || key;
                 var selector, val, year, month, day, hour, minute, ymd, hm;
@@ -131,7 +131,7 @@ if (gcal_url) {
                             if (param.type == 'checked') {
                                 selector += ':checked';
                             }
-                            $form.find(selector).each(function() {
+                            $form.find(selector).each(function () {
                                 val = $(this).val();
                                 if (val && val != param.default) {
                                     param_map[output_key].push(val);
@@ -141,7 +141,7 @@ if (gcal_url) {
                         case 'ymdhm':
                         case 'ymd':
                         case 'hm':
-                            $form.find('#' + key + ' .inputdate').each(function() {
+                            $form.find('#' + key + ' .inputdate').each(function () {
                                 year = $(this).find(':input[name^="year_' + key + '"]').val();
                                 month = $(this).find(':input[name^="month_' + key + '"]').val();
                                 day = $(this).find(':input[name^="day_' + key + '"]').val();
@@ -169,7 +169,7 @@ if (gcal_url) {
                             });
                             break;
                         case 'resid':
-                            $form.find('#' + key + ' .selectlistline').each(function() {
+                            $form.find('#' + key + ' .selectlistline').each(function () {
                                 param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
                             });
                             break;
@@ -216,14 +216,20 @@ info_html += '<h2 style="margin-bottom:15px;font-size:12px">出力要否(必要�
 info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label></div>';
 info_html += '<h2 style="margin-bottom:15px;font-size:12px">出力内容(JSON)</h2>';
 info_html += '<textarea id="paramJson" rows="6" cols="100" readonly>' + JSON.stringify(param_map, null, "    ") + '</textarea><button id="copyLongUrl" >URL再生成</button><br />';
-info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl" class="btn" data-clipboard-target="#longUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
+info_html += '<textarea id="longUrl" rows="6" cols="100">' + ariel_url + '</textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
 info_html += '<h2 style="margin-bottom:15px;font-size:12px">Google Shortener URL</h2>';
 info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
-info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortUrl" class="btn" data-clipboard-target="#shortUrl">コピー</button><button id="openShortUrl" >オープン</button><br />';
+info_html += '<input type="text" id="shortUrl" readonly /><button id="copyShortUrl">コピー</button><button id="openShortUrl" >オープン</button><br />';
 
 $info.append(info_html);
 
-$('#generateShortUrl').on('click', function() {
+$('#copyLongUrl').on('click', function () {
+    clipboadCopy('longUrl');
+});
+$('#copyShortUrl').on('click', function () {
+    clipboadCopy('shortUrl');
+});
+$('#generateShortUrl').on('click', function () {
     $.ajax({
         type: "POST",
         url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
@@ -232,7 +238,7 @@ $('#generateShortUrl').on('click', function() {
         data: JSON.stringify({
             "longUrl": $('#longUrl').text()
         }),
-        success: function(j_data) {
+        success: function (j_data) {
             $('#shortUrl').val(j_data.id);
         }
     });
@@ -240,7 +246,7 @@ $('#generateShortUrl').on('click', function() {
 
 /*レイヤー削除*/
 // TODO: ESCキーが押されたらを追加
-$(document).on('click', $layer, function(evt) {
+$(document).on('click', $layer, function (evt) {
     if (!$(evt.target).closest('#js-Info').length) {
         $info.remove();
         $layer.remove();
@@ -268,7 +274,7 @@ function formatToArielDate(iso8601DateTime) {
 
 function generateArielUrl(param_map) {
     var ariel_param = "";
-    Object.keys(param_map).forEach(function(key) {
+    Object.keys(param_map).forEach(function (key) {
         var param = param_map[key];
         if (param instanceof Array) {
             for (i = 0; i < param.length; i++) {
@@ -282,4 +288,10 @@ function generateArielUrl(param_map) {
     });
     ariel_param = ariel_param.substr(0, ariel_param.length - 1);
     return ariel_protocol + "://" + ariel_hostname + "/aqua/0/schedule/create?" + ariel_param;
+}
+
+function clipboadCopy(id) {
+    var urltext = document.getElementById(id);
+    urltext.select();
+    document.execCommand("copy");
 }
