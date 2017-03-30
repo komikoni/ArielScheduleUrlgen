@@ -1,5 +1,3 @@
-// TODO : 参加者、主催者、施設のチェックボックスを表示しデフォルトの出力対象から外す
-// TODO : convert_paramsを読み込んで、パラメータの出力有無選択
 // TODO : ☓ボタンを追加する、ESCキーで表示解除する
 var $ = require('jquery');
 var $tool = $('#ariel_schedule_urlgen');
@@ -93,7 +91,9 @@ function readParameter() {
         for (var i = 0; pair[i]; i++) {
             var kv = pair[i].split('=');
             var key = kv[0];
-            var value = decodeURIComponent((kv[1] || '').replace(/[+]/g, '%20'));
+            var value = kv[1] || '';
+            // 以降の処理の為に、URIエンコーディングの+を空白に変換してからデコード
+            value = decodeURIComponent(value.replace(/[+]/g, '%20'));
             switch (key) {
                 case 'text':
                     param_map.title = value;
