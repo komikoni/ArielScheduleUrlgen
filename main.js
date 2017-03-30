@@ -122,7 +122,7 @@ function readParameter() {
                     var output_key = param.output_key || key;
                     // 繰り返し指定がないときは繰返し項目を出力しない。
                     if (param.output !== false && (param.tab !== 'recurrent' || recurrent_type !== 'none')) {
-                        // 一旦全ての項目を配列項目として処理
+                        // 処理統一の為、一旦全ての項目を配列項目として処理
                         param_map[output_key] = [];
                         switch (param.type) {
                             case 'normal':
@@ -185,7 +185,7 @@ function readParameter() {
                                 }
                                 break;
                         }
-                        // 空パラメータは削除、配列許容項目以外は先頭項目を再設定
+                        // 空パラメータの削除、配列許容項目以外は先頭項目を再設定し配列を解除
                         if (param_map[output_key].length === 0) {
                             delete param_map[output_key];
                         } else if (!param.array) {
