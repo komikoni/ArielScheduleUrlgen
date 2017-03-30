@@ -251,15 +251,17 @@ $('#openShortUrl').on('click', function() {
 $('#generateShortUrl').on('click', function() {
     $('#shortUrl').val('');
     $.ajax({
-        type: "POST",
-        url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify({ "longUrl": $('#longUrl').val() }),
-        success: function(j_data) {
-            $('#shortUrl').val(j_data.id);
-        }
-    });
+            type: "POST",
+            url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({ "longUrl": $('#longUrl').val() })
+        }).done(function(data) {
+            $('#shortUrl').val(data.id);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            $('#shortUrl').val(textStatus);
+        });
 });
 
 /*レイヤー削除*/
