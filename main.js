@@ -215,7 +215,7 @@ info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力内容(JSON)</
 info_html += '<textarea id="paramJson" rows="10" cols="100" spellcheck="false"></textarea><br />';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力内容(LongURL)</h2>';
 info_html += '<textarea id="longUrl" rows="6" cols="100" spellcheck="false" style="word-break:break-all;"></textarea><button id="copyLongUrl">コピー</button><button id="openLongUrl" >オープン</button><br />';
-info_html += '<h2 style="margin-bottom:15px;font-size:20px">Google Shortener URL</h2>';
+info_html += '<h2 style="margin-bottom:15px;font-size:20px">Google Shortener URL　※要api-key設定、削除不可であることに注意</h2>';
 info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
 info_html += '<input type="text" id="shortUrl" /><button id="copyShortUrl">コピー</button><button id="openShortUrl" >オープン</button><br />';
 $info.append(info_html);
@@ -234,9 +234,6 @@ $('#organizer_flag, #attendee_flag, #facility_flag').on('change', function() {
     $('#longUrl').val(generateArielUrl(param_map2));
 });
 $('#paramJson').on('keyup', function() {
-    $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
-});
-$('#generateLongUrl').on('click', function() {
     $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
 });
 $('#copyLongUrl').on('click', function() {
