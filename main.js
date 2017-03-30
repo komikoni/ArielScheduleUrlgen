@@ -121,7 +121,7 @@ function readParameter() {
                     var param = convert_params[key];
                     var output_key = param.output_key || key;
                     // 繰り返し指定がないときは繰返し項目を出力しない。
-                    if (param.tab !== 'recurrent' || recurrent_type !== 'none') {
+                    if (param.output !== false && (param.tab !== 'recurrent' || recurrent_type !== 'none')) {
                         // 一旦全ての項目を配列項目として処理
                         param_map[output_key] = [];
                         switch (param.type) {
