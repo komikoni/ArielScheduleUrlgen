@@ -47,7 +47,7 @@ var convert_params = {
     limit_count: { name: "反復回数", type: "normal", tab: "recurrent" },
     limit_date: { name: "終了日", type: "ymd", tab: "recurrent" },
     recurrent_except_rule: { name: "特例日の扱い", type: "normal", default: "0", tab: "recurrent" },
-    recurrent_except_target: { name: "特例日", type: "checked", array: true, tab: "recurrent" },
+    recurrent_except_target: { name: "特例日対象", type: "checked", array: true, tab: "recurrent" },
     // 【その他タブ】
     radio_reflection: { name: "来館者の申請", type: "checked", default: "0", tab: "other" },
     visitor_company: { name: "来館者１会社名", type: "normal", tab: "other" },
