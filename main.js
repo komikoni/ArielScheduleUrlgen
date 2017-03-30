@@ -214,8 +214,8 @@ info_html += '<h2 style="margin-bottom:10px;font-size:20px">output schedule json
 info_html += '<textarea id="paramJson" rows="16" cols="100" spellcheck="false"></textarea><br />';
 info_html += '<h2 style="margin-bottom:10px;font-size:20px">output schedule longUrl (LongURL)</h2>';
 info_html += '<textarea id="longUrl" rows="6" cols="100" spellcheck="false" style="word-break:break-all;"></textarea><button id="copyLongUrl">url copy</button><button id="openLongUrl" >url open</button><br />';
-info_html += '<h2 style="margin-bottom:10px;font-size:20px">Google Shortener URL　※生成後削除不可に注意</h2>';
-info_html += '<button id="generateShortUrl" >shoten Url</button>(required api-key(boolmarkret data-shortener_api_key attribute))<br />';
+info_html += '<h2 style="margin-bottom:10px;font-size:20px">Google Shortener URL</h2>';
+info_html += '<button id="generateShortUrl" >shoten Url</button>(required api-key(data-shortener_api_key attribute of boolmarkret))<br />';
 info_html += '<input type="text" id="shortUrl" /><button id="copyShortUrl">url copy</button><button id="openShortUrl" >url open</button><br />';
 $info.append(info_html);
 
