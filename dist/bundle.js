@@ -268,6 +268,7 @@ $('#openShortUrl').on('click', function() {
     window.open($('#shortUrl').val());
 });
 $('#generateShortUrl').on('click', function() {
+    $('#shortUrl').val('');
     $.ajax({
         type: "POST",
         url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
