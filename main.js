@@ -255,9 +255,7 @@ $('#generateShortUrl').on('click', function() {
         url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify({
-            "longUrl": $('#longUrl').val()
-        }),
+        data: JSON.stringify({ "longUrl": $('#longUrl').val() }),
         success: function(j_data) {
             $('#shortUrl').val(j_data.id);
         }
