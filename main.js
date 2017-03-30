@@ -7,7 +7,7 @@ var ariel_systemname = $tool.data('systemname');
 var shortener_api_key = $tool.data('shortener_api_key');
 
 var convert_params = {
-    // 【基本タブ】
+    /* 【基本タブ】*/
     title: { name: "タイトル", type: "normal", tab: "basic" },
     label: { name: "ラベル", type: "checked", array: true, tab: "basic" },
     color: { name: "背景色", type: "normal", tab: "basic" },
@@ -16,20 +16,22 @@ var convert_params = {
     dtend: { name: "終了日時", type: "ymdhm", tab: "basic" },
     attendee: { name: "出席者", type: "resid", array: true, output: false, tab: "basic" },
     facility: { name: "施設", type: "resid", array: true, output: false, tab: "basic" },
-    // 【詳細タブ】
+    /* 【詳細タブ】*/
     organizer: { name: "開催者", type: "resid", output: false, tab: "detail" },
     body_format_check: { name: "本文・文字修飾", type: "checked", output_key: "body_format", tab: "detail" },
     body: { name: "本文", type: "body", tab: "detail" },
     location: { name: "場所", type: "normal", tab: "detail" },
     address: { name: "住所", type: "normal", tab: "detail" },
-    // 【システムタブ】
+    // file_input: {name: "添付ファイル", tab: "detail" },
+    addressuser: { name: "外部の出席者", type: "resid", array: true, tab: "detail" },
+    /* 【システムタブ】*/
     banner: { name: "予定の種別", type: "checked", default: "0", tab: "sysytem" },
     scope: { name: "公開範囲", type: "normal", tab: "sysytem" },
     additional_public: { name: "その他の公開範囲", type: "resid", array: true, tab: "sysytem" },
     allow_attendee_edit: { name: "編集許可", type: "normal", tab: "sysytem" },
     view_presence_on_news: { name: "出欠と予約状況", type: "normal", tab: "sysytem" },
     delegate_allowed: { name: "代理出席", type: "normal", tab: "sysytem" },
-    // 【繰り返しタブ】
+    /* 【繰り返しタブ】*/
     recurrent_type: { name: "パターン", type: "checked", default: "none", tab: "recurrent" },
     recurrent_interval: { name: "日・週・月・年毎", type: "normal", tab: "recurrent" },
     days_of_week: { name: "週毎の曜日", type: "checked", array: true, tab: "recurrent" },
@@ -48,7 +50,7 @@ var convert_params = {
     limit_date: { name: "終了日", type: "ymd", tab: "recurrent" },
     recurrent_except_rule: { name: "特例日の扱い", type: "normal", default: "0", tab: "recurrent" },
     recurrent_except_target: { name: "特例日対象", type: "checked", array: true, tab: "recurrent" },
-    // 【その他タブ】
+    /* 【その他タブ】*/
     radio_reflection: { name: "来館者の申請", type: "checked", default: "0", tab: "other" },
     visitor_company: { name: "来館者１会社名", type: "normal", tab: "other" },
     visitor_post: { name: "来館者１役職", type: "normal", tab: "other" },
