@@ -222,16 +222,16 @@ $info.append(info_html);
 
 $('#modaltitle').text(ariel_systemname + '予定登録用URL生成');
 var param_map = readParameter();
-$('#paramJson').text(JSON.stringify(param_map, null, "    "));
-$('#longUrl').text(generateArielUrl(param_map));
+$('#paramJson').val(JSON.stringify(param_map, null, "    "));
+$('#longUrl').val(generateArielUrl(param_map));
 
 $('#reLoad').on('click', function() {
     convert_params.organizer.output = $('#organizer_flag').prop('checked');
     convert_params.attendee.output = $('#attendee_flag').prop('checked');
     convert_params.facility.output = $('#facility_flag').prop('checked');
     var param_map2 = readParameter();
-    $('#paramJson').text(JSON.stringify(param_map2, null, "    "));
-    $('#longUrl').text(generateArielUrl(param_map2));
+    $('#paramJson').val(JSON.stringify(param_map2, null, "    "));
+    $('#longUrl').val(generateArielUrl(param_map2));
 });
 $('#generateLongUrl').on('click', function() {
     $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
@@ -255,7 +255,7 @@ $('#generateShortUrl').on('click', function() {
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify({
-            "longUrl": $('#longUrl').text()
+            "longUrl": $('#longUrl').val()
         }),
         success: function(j_data) {
             $('#shortUrl').val(j_data.id);
