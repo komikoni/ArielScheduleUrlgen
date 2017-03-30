@@ -225,13 +225,16 @@ var param_map = readParameter();
 $('#paramJson').val(JSON.stringify(param_map, null, "    "));
 $('#longUrl').val(generateArielUrl(param_map));
 
-$('#reLoad').on('click', function() {
+$('#organizer_flag, #attendee_flag, #facility_flag').on('change', function() {
     convert_params.organizer.output = $('#organizer_flag').prop('checked');
     convert_params.attendee.output = $('#attendee_flag').prop('checked');
     convert_params.facility.output = $('#facility_flag').prop('checked');
     var param_map2 = readParameter();
     $('#paramJson').val(JSON.stringify(param_map2, null, "    "));
     $('#longUrl').val(generateArielUrl(param_map2));
+});
+$('#paramJson').on('keyup', function() {
+    $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
 });
 $('#generateLongUrl').on('click', function() {
     $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
