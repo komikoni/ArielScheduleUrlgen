@@ -136,7 +136,7 @@ function readParameter() {
                 var $form = $('form[name="edit"]');
                 var recurrent_type = $form.find(':input[name="recurrent_type"]:checked').val();
 
-                Object.keys(convert_params).forEach(function (key) {
+                Object.keys(convert_params).forEach(function(key) {
                     var param = convert_params[key];
                     var output_key = param.output_key || key;
                     // 繰り返し指定がないときは繰返し項目を出力しない。
@@ -150,7 +150,7 @@ function readParameter() {
                                 if (param.type === 'checked') {
                                     selector += ':checked';
                                 }
-                                $form.find(selector).each(function () {
+                                $form.find(selector).each(function() {
                                     var val = $(this).val();
                                     // 空及びデフォルト値の場合出力しない
                                     if (val && val != param.default) {
@@ -161,7 +161,7 @@ function readParameter() {
                             case 'ymdhm':
                             case 'ymd':
                             case 'hm':
-                                $form.find('#' + key + ' .inputdate').each(function () {
+                                $form.find('#' + key + ' .inputdate').each(function() {
                                     var $this = $(this);
                                     var year = $this.find(':input[name^="year_' + key + '"]').val();
                                     var month = $this.find(':input[name^="month_' + key + '"]').val();
@@ -190,7 +190,7 @@ function readParameter() {
                                 });
                                 break;
                             case 'resid':
-                                $form.find('#' + key + ' .selectlistline').each(function () {
+                                $form.find('#' + key + ' .selectlistline').each(function() {
                                     param_map[output_key].push($(this).attr('resid').replace(/^.+\//, ''));
                                 });
                                 break;
@@ -226,8 +226,8 @@ var $layer = $('#js-GlayLayer');
 var $info = $('#js-Info');
 
 var info_html = '';
-info_html += '<h1 id="title" style="margin-bottom:30px;font-size:24px"></h1>';
-info_html += '<p style="margin-bottom:30px">JSONを見て出力されるURLの内容に問題ないか確認して下さい。 問題ある場合は、JSONを編集し再出力して下さい。 短縮URLを生成する場合は、削除できない為、内容をよくよく確認して下さい。(生成にはapi-keyが必要です)</p>';
+info_html += '<h1 id="modaltitle" style="margin-bottom:30px;font-size:24px"></h1>';
+info_html += '<p style="margin-bottom:30px">出力内容をJSONで確認して下さい。短縮URLは、削除不可の為、内容確認後に生成して下さい。(生成にはapi-keyが必要です)</p>';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力要否(必要な場合チェック)</h2>';
 info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label><button id="reLoad" >再読込</button></div>';
 info_html += '<h2 style="margin-bottom:15px;font-size:20px">出力内容(JSON)</h2>';
@@ -239,35 +239,35 @@ info_html += '<button id="generateShortUrl" >短縮URL生成</button><br />';
 info_html += '<input type="text" id="shortUrl" /><button id="copyShortUrl">コピー</button><button id="openShortUrl" >オープン</button><br />';
 $info.append(info_html);
 
-$('#title').text(ariel_systemname + '予定登録用URL生成');
+$('#modaltitle').text(ariel_systemname + '予定登録用URL生成');
 var param_map = readParameter();
 $('#paramJson').text(JSON.stringify(param_map, null, "    "));
 $('#longUrl').text(generateArielUrl(param_map));
 
-$('#reLoad').on('click', function () {
+$('#reLoad').on('click', function() {
     convert_params.organizer.output = $('#organizer_flag').prop('checked');
     convert_params.attendee.output = $('#attendee_flag').prop('checked');
     convert_params.facility.output = $('#facility_flag').prop('checked');
-    var param_map = readParameter();
-    $('#paramJson').text(JSON.stringify(param_map, null, "    "));
-    $('#longUrl').text(generateArielUrl(param_map));
+    var param_map2 = readParameter();
+    $('#paramJson').text(JSON.stringify(param_map2, null, "    "));
+    $('#longUrl').text(generateArielUrl(param_map2));
 });
-$('#generateLongUrl').on('click', function () {
+$('#generateLongUrl').on('click', function() {
     $('#longUrl').val(generateArielUrl(JSON.parse($('#paramJson').val())));
 });
-$('#copyLongUrl').on('click', function () {
+$('#copyLongUrl').on('click', function() {
     clipboadCopy('longUrl');
 });
-$('#openLongUrl').on('click', function () {
+$('#openLongUrl').on('click', function() {
     window.open($('#longUrl').val());
 });
-$('#copyShortUrl').on('click', function () {
+$('#copyShortUrl').on('click', function() {
     clipboadCopy('shortUrl');
 });
-$('#openShortUrl').on('click', function () {
+$('#openShortUrl').on('click', function() {
     window.open($('#shortUrl').val());
 });
-$('#generateShortUrl').on('click', function () {
+$('#generateShortUrl').on('click', function() {
     $.ajax({
         type: "POST",
         url: "https://www.googleapis.com/urlshortener/v1/url?key=" + shortener_api_key,
@@ -276,7 +276,7 @@ $('#generateShortUrl').on('click', function () {
         data: JSON.stringify({
             "longUrl": $('#longUrl').text()
         }),
-        success: function (j_data) {
+        success: function(j_data) {
             $('#shortUrl').val(j_data.id);
         }
     });
@@ -284,7 +284,7 @@ $('#generateShortUrl').on('click', function () {
 
 /*レイヤー削除*/
 // TODO: ESCキーが押されたらを追加
-$(document).on('click', $layer, function (evt) {
+$(document).on('click', $layer, function(evt) {
     if (!$(evt.target).closest('#js-Info').length) {
         $info.remove();
         $layer.remove();
@@ -312,7 +312,7 @@ function formatToArielDate(iso8601DateTime) {
 
 function generateArielUrl(param_map) {
     var ariel_param = "";
-    Object.keys(param_map).forEach(function (key) {
+    Object.keys(param_map).forEach(function(key) {
         var param = param_map[key];
         if (param instanceof Array) {
             for (i = 0; i < param.length; i++) {
