@@ -208,9 +208,9 @@ var $info = $('#js-Info');
 
 var info_html = '';
 info_html += '<h1 id="modaltitle" style="margin-bottom:20px;font-size:24px"></h1>';
-info_html += '<h2 style="margin-bottom:10px;font-size:20px">output setting (auto update json & url)</h2>';
+info_html += '<h2 style="margin-bottom:10px;font-size:20px">output setting (json & url auto update)</h2>';
 info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label>';
-info_html += '<h2 style="margin-bottom:10px;font-size:20px">output schedule json (auto update long url)</h2>';
+info_html += '<h2 style="margin-bottom:10px;font-size:20px">output schedule json (long url auto update)</h2>';
 info_html += '<textarea id="paramJson" rows="16" cols="100" spellcheck="false"></textarea><br />';
 info_html += '<h2 style="margin-bottom:10px;font-size:20px">output schedule longUrl (LongURL)</h2>';
 info_html += '<textarea id="longUrl" rows="6" cols="100" spellcheck="false" style="word-break:break-all;"></textarea><button id="copyLongUrl">url copy</button><button id="openLongUrl" >url open</button><br />';
@@ -219,7 +219,7 @@ info_html += '<button id="generateShortUrl" >shoten Url</button>(required api-ke
 info_html += '<input type="text" id="shortUrl" /><button id="copyShortUrl">url copy</button><button id="openShortUrl" >url open</button><br />';
 $info.append(info_html);
 
-$('#modaltitle').text(ariel_systemname + ' Schedule URL generator');
+$('#modaltitle').text(ariel_systemname + ' Schedule URL Generator');
 var param_map = readParameter();
 $('#paramJson').val(JSON.stringify(param_map, null, "    "));
 $('#longUrl').val(generateArielUrl(param_map));
