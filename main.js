@@ -134,11 +134,7 @@ function readParameter() {
                                     selector += ':checked';
                                 }
                                 $form.find(selector).each(function() {
-                                    var val = $(this).val();
-                                    // 空及びデフォルト値の場合出力しない
-                                    if (val && val != param.default) {
-                                        param_map[output_key].push(val);
-                                    }
+                                    param_map[output_key].push($(this).val());
                                 });
                                 break;
                             case 'ymdhm':
@@ -191,7 +187,14 @@ function readParameter() {
                         if (param_map[output_key].length === 0) {
                             delete param_map[output_key];
                         } else if (!param.array) {
-                            param_map[output_key] = param_map[output_key][0];
+                            var val = param_map[output_key][0];
+                            // 空及びデフォルト値の場合出力しない
+                            if (val && val != param.default) {
+                                param_map[output_key] = param_map[output_key][0];
+                            } else {
+                                delete param_map[output_key];
+                            }
+
                         }
                     }
                 });
