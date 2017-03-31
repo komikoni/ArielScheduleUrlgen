@@ -5,7 +5,8 @@
  * ariel_schedule_urlgen:
  *   license: ISC (http://opensource.org/licenses/ISC)
  *   author: Keisuke Konishi
- *   version: 0.1.0
+ *   homepage: https://github.com/komikoni/ArielScheduleUrlgen
+ *   version: 1.0.0
  *
  * jquery:
  *   license: MIT (http://opensource.org/licenses/MIT)

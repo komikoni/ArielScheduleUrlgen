@@ -6,16 +6,7 @@ var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 
 // browserify and gulp.
-gulp.task('watch', function() {
-    gulp.watch(['./*.js'], ['build-js']);
-});
-gulp.task('browserify', function() {
-    return browserify('./main.js')
-        .bundle()
-        .pipe(source('bundle.js'))
-        .pipe(gulp.dest('./dist/'));
-});
-gulp.task('build-js', function() {
+gulp.task('default', function() {
     return browserify({
             entries: './main.js' // どのファイルからビルドするか
         }).plugin('licensify') // licensifyプラグインの有効化
@@ -25,5 +16,14 @@ gulp.task('build-js', function() {
         .pipe(uglify({
             preserveComments: 'license' // ライセンスコメントを残しつつminify
         }))
-        .pipe(gulp.dest('./dist')); // 出力
+        .pipe(gulp.dest('./dist'));
+});
+gulp.task('watch', function() {
+    gulp.watch(['./*.js'], ['default']);
+});
+gulp.task('debug', function() {
+    return browserify('./main.js')
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('./dist/'));
 });
