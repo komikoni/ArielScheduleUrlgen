@@ -228,7 +228,7 @@ var param_map = readParameter();
 $('#paramJson').val(JSON.stringify(param_map, null, "    "));
 $('#longUrl').val(generateArielUrl(param_map));
 
-$('#organizer_flag, #attendee_flag, #facility_flag').on('change', function() {
+$('#organizer_flag, #attendee_flag, #facility_flag, #addressUser_flag').on('change', function() {
     convert_params.organizer.output = $('#organizer_flag').prop('checked');
     convert_params.attendee.output = $('#attendee_flag').prop('checked');
     convert_params.facility.output = $('#facility_flag').prop('checked');
