@@ -122,7 +122,7 @@ function readParameter() {
                 Object.keys(convert_params).forEach(function(key) {
                     var param = convert_params[key];
                     var output_key = param.output_key || key;
-                    // 繰り返し指定がないときは繰返し項目を出力しない。
+                    // 出力しない設定、または、繰り返し予定でないときは繰返しタブの項目を出力しない。
                     if (param.output !== false && (param.tab !== 'recurrent' || recurrent_type !== 'none')) {
                         // 処理統一の為、一旦全ての項目を配列項目として処理
                         param_map[output_key] = [];
