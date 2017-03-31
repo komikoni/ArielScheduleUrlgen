@@ -190,7 +190,7 @@ function readParameter() {
                             var val = param_map[output_key][0];
                             // 空及びデフォルト値の場合出力しない
                             if (val && val != param.default) {
-                                param_map[output_key] = param_map[output_key][0];
+                                param_map[output_key] = val;
                             } else {
                                 delete param_map[output_key];
                             }
