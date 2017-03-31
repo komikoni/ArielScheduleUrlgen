@@ -88,6 +88,7 @@ function readParameter() {
     var gcal_url = $('a[href*="//www.google.com/calendar/event?"],' +
         'a[href*="//www.google.com/calendar/render?"]').prop('href');
     if (gcal_url) {
+        $('#output_setting').remove();
         var gcal_param = gcal_url.match(/[?].+/)[0].substr(1);
         var pair = gcal_param.split('&');
         for (var i = 0; pair[i]; i++) {
@@ -213,7 +214,7 @@ var $info = $('#js-Info');
 
 var info_html = '';
 info_html += '<h1 id="modaltitle" style="margin-top:0px;margin-bottom:20px;font-size:24px"></h1>';
-info_html += '<input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" checked="checked" /><label for="attendee_flag">出席者</label><input type="checkbox" id="addressUser_flag" checked="checked" /><label for="addressUser_flag">外部の出席者</label>';
+info_html += '<div id="output_setting"><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" checked="checked" /><label for="attendee_flag">出席者</label><input type="checkbox" id="addressUser_flag" checked="checked" /><label for="addressUser_flag">外部の出席者</label></div>';
 info_html += '<h2 style="margin-bottom:10px;font-size:20px;">出力内容JSONとURL (編集可、自動反映)</h2>';
 info_html += '<textarea id="paramJson" rows="10" cols="100" spellcheck="false"></textarea><br />';
 info_html += '<textarea id="longUrl" rows="6" cols="100" spellcheck="false" style="word-break:break-all;"></textarea><br />';
