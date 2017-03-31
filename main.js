@@ -14,7 +14,7 @@ var convert_params = {
     is_all_day: { name: "終日", type: "checked", tab: "basic" },
     dtstart: { name: "開始日時", type: "ymdhm", tab: "basic" },
     dtend: { name: "終了日時", type: "ymdhm", tab: "basic" },
-    attendee: { name: "出席者", type: "resid", array: true, output: false, tab: "basic" },
+    attendee: { name: "出席者", type: "resid", array: true, output: true, tab: "basic" },
     facility: { name: "施設", type: "resid", array: true, output: false, tab: "basic" },
     /* 【詳細タブ】*/
     organizer: { name: "開催者", type: "resid", output: false, tab: "detail" },
@@ -23,7 +23,7 @@ var convert_params = {
     location: { name: "場所", type: "normal", tab: "detail" },
     address: { name: "住所", type: "normal", tab: "detail" },
     // file_input: {name: "添付ファイル", tab: "detail" },
-    addressUser: { name: "外部の出席者", type: "resid", array: true, output: false, tab: "detail" },
+    addressUser: { name: "外部の出席者", type: "resid", array: true, output: true, tab: "detail" },
     /* 【システムタブ】*/
     banner: { name: "予定の種別", type: "checked", default: "0", tab: "sysytem" },
     scope: { name: "公開範囲", type: "normal", tab: "sysytem" },
@@ -210,7 +210,7 @@ var $info = $('#js-Info');
 
 var info_html = '';
 info_html += '<h1 id="modaltitle" style="margin-bottom:20px;font-size:24px"></h1>';
-info_html += '<input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label>';
+info_html += '<input type="checkbox" id="attendee_flag" checked="checked" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="addressUser_flag" checked="checked" /><label for="addressUser_flag">外部の出席者</label>';
 info_html += '<h2 style="margin-bottom:10px;font-size:20px;">出力内容JSONとURL (自動反映)</h2>';
 info_html += '<textarea id="paramJson" rows="6" cols="100" spellcheck="false"></textarea><br />';
 info_html += '<textarea id="longUrl" rows="6" cols="100" spellcheck="false" style="word-break:break-all;"></textarea><br />';
@@ -229,6 +229,7 @@ $('#organizer_flag, #attendee_flag, #facility_flag').on('change', function() {
     convert_params.organizer.output = $('#organizer_flag').prop('checked');
     convert_params.attendee.output = $('#attendee_flag').prop('checked');
     convert_params.facility.output = $('#facility_flag').prop('checked');
+    convert_params.addressUser.output = $('#addressUser_flag').prop('checked');
     var param_map2 = readParameter();
     $('#paramJson').val(JSON.stringify(param_map2, null, "    "));
     $('#longUrl').val(generateArielUrl(param_map2));
