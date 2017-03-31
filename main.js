@@ -212,12 +212,11 @@ var info_html = '';
 info_html += '<h1 id="modaltitle" style="margin-bottom:20px;font-size:24px"></h1>';
 info_html += '<h2 style="margin-bottom:10px;font-size:20px">出力設定 (自動反映)</h2>';
 info_html += '<div><input type="checkbox" id="organizer_flag" /><label for="organizer_flag">開催者</label><input type="checkbox" id="attendee_flag" /><label for="attendee_flag">出席者</label><input type="checkbox" id="facility_flag"/><label for="facility_flag">施設</label>';
-info_html += '<h2 style="margin-bottom:10px;font-size:20px">予定JSON (自動反映)</h2>';
+info_html += '<h2 style="margin-bottom:10px;font-size:20px">予定JSONとURL (自動反映)</h2>';
 info_html += '<textarea id="paramJson" rows="6" cols="100" spellcheck="false"></textarea><br />';
-info_html += '<h2 style="margin-bottom:10px;font-size:20px">予定URL</h2>';
 info_html += '<textarea id="longUrl" rows="6" cols="100" spellcheck="false" style="word-break:break-all;"></textarea><button id="copyLongUrl">URLをコピー</button><button id="openLongUrl" >URLを開く</button><br />';
 info_html += '<h2 style="margin-bottom:10px;font-size:20px">Google Shortener URL</h2>';
-info_html += '<button id="generateShortUrl" >短縮URL生成</button>(required api-key(data-shortener_api_key attribute of boolmarkret))<br />';
+info_html += '<button id="generateShortUrl" >短縮URL生成</button> (api-key必須)<br />';
 info_html += '<input type="text" id="shortUrl" /><button id="copyShortUrl">URLをコピー</button><button id="openShortUrl" >URLを開く</button><br />';
 $info.append(info_html);
 
