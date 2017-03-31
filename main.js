@@ -162,7 +162,7 @@ function readParameter() {
                                             break;
                                         case 'hm':
                                             if (hour && minute) {
-                                                param_map[output_key].push('0001-01-01 ' + hm);
+                                                param_map[output_key].push('2017-01-01 ' + hm);
                                             }
                                             break;
                                     }
