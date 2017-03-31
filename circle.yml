@@ -17,7 +17,7 @@ deployment:
     branch: master
     commands:
       - aws s3 sync dist/ s3://arielscheduleurlgen/ --delete
-  production: # just a label; label names are completely up to you
+  test:
     branch: develop
     commands:
       - aws s3 sync dist/ s3://arielscheduleurlgen-test/ --delete
