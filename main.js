@@ -6,7 +6,7 @@ var ariel_hostname = $tool.data('hostname');
 var ariel_systemname = $tool.data('systemname');
 var shortener_api_key = $tool.data('shortener_api_key');
 
-var convert_params = {
+var params_info = {
     /* 【基本タブ】*/
     title: { name: "タイトル", type: "normal", tab: "basic" },
     label: { name: "ラベル", type: "checked", array: true, tab: "basic" },
@@ -119,8 +119,8 @@ function readParameter() {
                 var $form = $('form[name="edit"]');
                 var recurrent_type = $form.find(':input[name="recurrent_type"]:checked').val();
 
-                Object.keys(convert_params).forEach(function(key) {
-                    var param = convert_params[key];
+                Object.keys(params_info).forEach(function(key) {
+                    var param = params_info[key];
                     var output_key = param.output_key || key;
                     // 出力しない設定、または、繰り返し予定でないときは繰返しタブの項目を出力しない。
                     if (param.output !== false && (param.tab !== 'recurrent' || recurrent_type !== 'none')) {
@@ -229,10 +229,10 @@ $('#paramJson').val(JSON.stringify(param_map, null, "    "));
 $('#longUrl').val(generateArielUrl(param_map));
 
 $('#organizer_flag, #attendee_flag, #facility_flag, #addressUser_flag').on('change', function() {
-    convert_params.organizer.output = $('#organizer_flag').prop('checked');
-    convert_params.attendee.output = $('#attendee_flag').prop('checked');
-    convert_params.facility.output = $('#facility_flag').prop('checked');
-    convert_params.addressUser.output = $('#addressUser_flag').prop('checked');
+    params_info.organizer.output = $('#organizer_flag').prop('checked');
+    params_info.attendee.output = $('#attendee_flag').prop('checked');
+    params_info.facility.output = $('#facility_flag').prop('checked');
+    params_info.addressUser.output = $('#addressUser_flag').prop('checked');
     var param_map2 = readParameter();
     $('#paramJson').val(JSON.stringify(param_map2, null, "    "));
     $('#longUrl').val(generateArielUrl(param_map2));
