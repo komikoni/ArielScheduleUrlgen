@@ -4,7 +4,7 @@ var $tool = $('#ariel_schedule_urlgen');
 var ariel_protocol = $tool.data('protocol');
 var ariel_hostname = $tool.data('hostname');
 var ariel_systemname = $tool.data('systemname');
-var shortener_api_key = $tool.data('shortener_api_key');
+var shortener_api_key = $tool.data('apikey');
 
 var params_info = {
     /* 【基本タブ】*/
