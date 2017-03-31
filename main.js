@@ -23,7 +23,7 @@ var convert_params = {
     location: { name: "場所", type: "normal", tab: "detail" },
     address: { name: "住所", type: "normal", tab: "detail" },
     // file_input: {name: "添付ファイル", tab: "detail" },
-    addressuser: { name: "外部の出席者", type: "resid", array: true, tab: "detail" },
+    addressUser: { name: "外部の出席者", type: "resid", array: true, tab: "detail" },
     /* 【システムタブ】*/
     banner: { name: "予定の種別", type: "checked", default: "0", tab: "sysytem" },
     scope: { name: "公開範囲", type: "normal", tab: "sysytem" },
